@@ -98,7 +98,7 @@ html[lang=en] .arabic,html[lang=en] .direction-strip [lang=ar]{font-family:Arabi
 
 .contribute-bottom .button{align-self:flex-start;gap:18px;max-inline-size:100%}
 
-/* Physical columns keep the installation CTA on the right in every locale. */
+/* Physical columns keep the RTL copy on the right. English mirrors these columns. */
 .hero-layout{display:grid;direction:ltr;grid-template-columns:minmax(0,.9fr) minmax(0,1.2fr);grid-template-areas:"visual copy";align-items:center;gap:clamp(32px,5vw,80px);padding-block:32px 55px}
 .hero-copy{grid-area:copy;min-inline-size:0;direction:ltr}
 html[dir=rtl] .hero-copy{direction:rtl}
@@ -170,4 +170,8 @@ html[dir=rtl] .hero-actions .button,html[dir=rtl] .hero-actions .micro{direction
 @media(min-width:1001px){
   .hero{display:grid;grid-template-rows:auto 1fr auto;min-block-size:88svh;padding-block-start:clamp(24px,4svh,48px)}
   .hero-layout{padding-block:clamp(24px,4svh,48px)}
+}
+
+@media(min-width:701px){
+  html[lang=en] .hero-layout{grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr);grid-template-areas:"copy visual"}
 }
