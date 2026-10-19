@@ -36,3 +36,10 @@ bdi{unicode-bidi:isolate}
   .header{gap:10px}
   .header nav a:nth-child(2){display:none}
 }
+.challenge-intro{
+  max-inline-size:940px;
+  margin-block-start:18px;
+  color:var(--muted);
+  font-size:clamp(16px,1.6vw,21px);
+  line-height:1.75;
+}

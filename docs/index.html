@@ -7,6 +7,10 @@
   <meta name="description" content="RTRTL — Right to RTL. An open-source AI skill for readable Hebrew and mixed-direction text, from the first draft.">
   <meta property="og:title" content="RTRTL — Give Hebrew the right direction.">
   <meta property="og:description" content="A small, open-source skill. Better Hebrew. Across your stack.">
+  <meta property="og:site_name" content="RTRTL">
+  <meta property="og:locale" content="en_US">
+  <meta property="og:locale:alternate" content="he_IL">
+  <meta property="og:url" content="https://oriashkenazi.github.io/RTRTL/">
   <meta property="og:type" content="website">
   <title>RTRTL — Right to RTL</title>
   <script src="assets/locale.js?v=0.1.0"></script>
@@ -15,8 +19,8 @@
   <link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
   <link rel="preload" href="assets/fonts/Geist.ttf" as="font" type="font/ttf" crossorigin>
   <link rel="preload" href="assets/fonts/NotoSansHebrew.ttf" as="font" type="font/ttf" crossorigin>
-  <link rel="stylesheet" href="assets/style.css?v=0.1.0">
-  <script src="assets/app.js?v=0.1.0" defer></script>
+  <link rel="stylesheet" href="assets/style.css?v=0.1.1">
+  <script src="assets/app.js?v=0.1.1" defer></script>
 </head>
 <body>
 <a class="skip" href="#main">Skip to content</a>
@@ -27,9 +31,10 @@
 </header>
 <main id="main">
   <section class="hero wrap" aria-labelledby="hero-title">
-    <div class="eyebrow"><span class="signal" aria-hidden="true"></span> AN OPEN-SOURCE SKILL FOR AI AGENTS</div>
+    <div class="eyebrow"><span class="signal" aria-hidden="true"></span> THE CHALLENGE: READABLE HEBREW IN EVERY OUTPUT</div>
+    <p class="challenge-intro">Hebrew reads from right to left. English reads from left to right. When your AI agent combines them with numbers, codes and punctuation, parts of the text can appear in the wrong order. Right alignment alone does not fix text direction.</p>
     <div class="hero-heading"><h1 id="hero-title">Give Hebrew<br>the <span class="right-word">right<svg viewBox="0 0 420 34" aria-hidden="true"><path d="M5 23 Q200 -4 412 17"/></svg></span> direction<span class="period">.</span></h1><span class="hero-arrow" aria-hidden="true">↙</span></div>
-    <div class="hero-bottom"><p>RTL from the first draft.<br>Readable Hebrew. Intact English. One small skill that teaches your AI how.</p><div class="hero-actions"><a class="button button-dark" href="#install">Let your AI install it <span aria-hidden="true">↲</span></a><span class="micro">Free to use. MIT licensed. Built to share.</span></div></div>
+    <div class="hero-bottom"><p>RTRTL is an open-source skill that gives your AI agent practical guidance for writing and creating content with the right direction, from the first draft.</p><div class="hero-actions"><a class="button button-dark" href="#install"><span>Install with your AI agent</span> <span aria-hidden="true">↲</span></a><span class="micro">Free to use. MIT licensed. Built to share.</span></div></div>
     <div class="direction-strip" aria-hidden="true"><span>RIGHT TO RTL</span><span>הזכות לכתוב בכיוון הנכון</span><span>LOGICAL TEXT · READABLE OUTPUT</span></div>
   </section>
 
@@ -49,7 +54,7 @@
 
   <section class="principles wrap" aria-labelledby="principles-title"><span class="section-index">02 / SMALL INSTRUCTIONS. BETTER DEFAULTS.</span><h2 id="principles-title">Write it right.<br>Keep it real.</h2><div class="principle-grid"><article><span class="principle-number">↲</span><h3>Author for direction.</h3><p>Set RTL before rendering. Keep canonical text in Unicode order and preserve exact codes, URLs and values.</p></article><article><span class="principle-number">{ }</span><h3>Keep the mix intact.</h3><p>Use the target format’s native direction scopes. Give English phrases and signed quantities their own space.</p></article><article><span class="principle-number">✓</span><h3>Verify what ships.</h3><p>Check the actual consumer and requested export. Separate appearance, structure and search/copy results.</p></article></div></section>
 
-  <section id="stacks" class="stacks wrap" aria-labelledby="stacks-title"><div class="section-heading"><div><span class="section-index">03 / ONE CORE. FORMAT-SPECIFIC RECIPES.</span><h2 id="stacks-title">Meet your stack.</h2></div><p>Load the adapter you need.<br>Keep the rest out of context.</p></div>
+  <section id="stacks" class="stacks wrap" aria-labelledby="stacks-title"><div class="section-heading"><div><span class="section-index">03 / ONE CORE. FORMAT-SPECIFIC GUIDES.</span><h2 id="stacks-title">Meet your stack.</h2></div><p>Load the adapter you need.<br>Keep the rest out of context.</p></div>
     <div class="stack-list">
       <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/web.md"><span class="stack-no">01</span><h3>Web & React</h3><span class="stack-desc">Semantic HTML · logical CSS · isolated runs</span><span class="status">Browser checked</span><span aria-hidden="true">↗</span></a>
       <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/word.md"><span class="stack-no">02</span><h3>Word</h3><span class="stack-desc">Paragraph bidi · logical alignment · complex scripts</span><span class="status">Native export checked</span><span aria-hidden="true">↗</span></a>
@@ -57,10 +62,10 @@
       <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md"><span class="stack-no">04</span><h3>Excel</h3><span class="stack-desc">Sheet direction · typed values · display adapters</span><span class="status">Native export checked</span><span aria-hidden="true">↗</span></a>
       <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md"><span class="stack-no">05</span><h3>PDF</h3><span class="stack-desc">Fonts · shaping · extraction is a separate check</span><span class="status">Export paths checked</span><span aria-hidden="true">↗</span></a>
       <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md"><span class="stack-no">06</span><h3>And beyond</h3><span class="stack-desc">WPF · graphics · LaTeX · plain text · subtitles</span><span class="status status-neutral">Coverage varies</span><span aria-hidden="true">↗</span></a>
-    </div><p class="scope-note">Checked on a small synthetic corpus in named environments. Recipes are a starting point, not universal renderer certification. <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md">See evidence & limits ↗</a></p>
+    </div><p class="scope-note">Checked on a small synthetic corpus in named environments. The guidance does not guarantee compatibility with every application. <a href="https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md">See evidence & limits ↗</a></p>
   </section>
 
-  <section id="install" class="install-section" aria-labelledby="install-title"><div class="wrap install-grid"><div><span class="section-index">04 / GIVE YOUR AI A BETTER DEFAULT</span><h2 id="install-title">One prompt.<br>A better direction.</h2><p>Ask your skill-capable AI to install RTRTL. It reads a compact core and opens a format recipe only when the task needs it.</p><a class="text-link" href="https://github.com/OriAshkenazi/RTRTL/blob/main/INSTALL.md">Manual install & other agents ↗</a></div><div class="prompt-panel"><div class="prompt-top"><span>PASTE INTO CODEX</span><button class="copy-button" id="copy-prompt">Copy prompt <span aria-hidden="true">↗</span></button></div><p id="install-prompt">Use $skill-installer to install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Preserve any existing local skill edits. Verify that SKILL.md and its relative references are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.</p><p id="copy-status" class="copy-status" role="status"></p><div class="install-foot">No account or API key for the skill. Host permissions still apply. Other agents need their own configured skills directory. If Codex does not discover it, start a new turn or restart.</div></div></div></section>
+  <section id="install" class="install-section" aria-labelledby="install-title"><div class="wrap install-grid"><div><span class="section-index">04 / GIVE YOUR AI AGENT A BETTER DEFAULT</span><h2 id="install-title">One prompt.<br>A better direction.</h2><p>Ask your AI agent to install RTRTL. In a skill-capable environment, it reads a compact core and reads the relevant implementation guide only when the task needs it.</p><a class="text-link" href="https://github.com/OriAshkenazi/RTRTL/blob/main/INSTALL.md">More ways to install with your AI agent ↗</a></div><div class="prompt-panel"><div class="prompt-top"><span>PASTE INTO CODEX</span><button class="copy-button" id="copy-prompt">Copy prompt <span aria-hidden="true">↗</span></button></div><p id="install-prompt">Use $skill-installer to install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Preserve any existing local skill edits. Verify that SKILL.md and its relative references are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.</p><p id="copy-status" class="copy-status" role="status"></p><div class="install-foot">No account or API key for the skill. Host permissions still apply. Your AI agent needs a skills directory configured for its environment. If Codex does not discover it, start a new turn or restart.</div></div></div></section>
 
   <section id="contribute" class="contribute wrap" aria-labelledby="contribute-title"><span class="section-index">05 / OPEN SOURCE. OPEN INVITATION.</span><div class="contribute-heading"><h2 id="contribute-title">Bring your stack.<br>Move us <span>forward.</span></h2><span class="contribute-arrow" aria-hidden="true">↖</span></div><div class="contribute-bottom"><p>Built for Hebrew. Better with everyone.<br>We welcome new stacks, renderer fixes, font guidance, clearer docs and small, reproducible examples. Help make correct RTL the default wherever people write.</p><div><a class="button button-dark" href="https://github.com/OriAshkenazi/RTRTL/blob/main/CONTRIBUTING.md">Contribute on GitHub <span aria-hidden="true">↗</span></a><a class="issue-link" href="https://github.com/OriAshkenazi/RTRTL/issues/new/choose">Suggest a stack or report a bug ↗</a></div></div><div class="contribution-tags"><span>New adapters</span><span>Real renderer evidence</span><span>More accessible output</span><span>Better docs</span></div></section>
 </main>

@@ -21,3 +21,9 @@ Minimal authored mixed-content example:
 ```
 
 Use the task's available font; prefer logical CSS spacing and `text-align:start`. `dir="auto"` is for unknown-direction content, not a known Hebrew heading starting with a code.
+
+## Link previews and other plain-text consumers
+
+Open Graph, social-card metadata and the document title are separate output surfaces. Page CSS, `<bdi>` and `dir="rtl"` cannot be assumed to control a receiving app's link preview. For a Hebrew card, prefer a Hebrew-only title; place a Latin brand in `og:site_name` separately. Supply the correct `og:locale`, explicit language URL and readable static metadata. Do not rely on the page's JavaScript language redirect to localize a crawler's response. Avoid HTML or unverified invisible controls inside metadata strings.
+
+Read the served HTML without executing JavaScript, then inspect a fresh preview in the actual sharing app when available. A browser card simulation is only a regression aid; it does not verify WhatsApp, another app, or an existing cached message. A supplied failure screenshot establishes that consumer's observed failure, not the success of a later fix. [Open Graph fields](https://ogp.me/).

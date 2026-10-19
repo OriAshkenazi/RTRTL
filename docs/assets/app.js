@@ -28,7 +28,7 @@ document.querySelector('#copy-prompt').addEventListener('click', async () => {
   const status = document.querySelector('#copy-status');
   try {
     await navigator.clipboard.writeText(prompt.textContent.trim());
-    status.textContent = hebrew ? 'הועתק. הדביקו בשיחה עם העוזר שלכם.' : 'Copied. Paste into your AI chat.';
+    status.textContent = hebrew ? 'הועתק. הדביקו בשיחה עם סוכן ה־AI שלכם.' : 'Copied. Paste into your AI agent’s chat.';
   } catch {
     // Keep the prompt available when browser clipboard permission is unavailable.
     const range = document.createRange();

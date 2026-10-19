@@ -14,6 +14,10 @@ RTRTL supplies portable authoring principles and format-specific recipes. The fo
 
 Separate four kinds of evidence: canonical source/structure, visible layout and fonts, interaction, and actual search/copy. One cannot substitute for the others. Editing round trips and assistive technologies need their own checks when required.
 
+## Sharing metadata
+
+A WhatsApp link-preview screenshot exposed misplaced punctuation in a Hebrew title prefixed by the Latin brand. The Hebrew page now serves a Hebrew-only title and descriptions, with brand and locale in separate Open Graph fields and matching title fallback metadata. Static regression checks catch the previous LTR-first title. Browser simulations do not verify WhatsApp: a fresh card in that app, its caching behavior, and other social consumers remain unverified. The screenshot establishes the original failure only; no WhatsApp version was supplied. Direct `/he/` links carry Hebrew metadata without requiring JavaScript; the default English page serves English metadata to non-JavaScript crawlers.
+
 ## Efficiency
 
 The authoring core uses progressive disclosure: ordinary replies need no tools; an artifact normally needs one adapter. Earlier local optimization reduced an equivalent core from roughly 1,524 to 679 `o200k_base` tokens. These are local tokenizer estimates, not billed model usage or a guarantee of savings; release edits can change the count. Sixteen local execution probes checked format selection, conditional dependencies and rejection of unsupported manifest-only checking. Public CI checks packaging, installation and HTML fixture generation; it does not run Office or certify native rendering.

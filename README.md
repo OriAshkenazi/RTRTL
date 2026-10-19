@@ -8,7 +8,7 @@ An open-source AI skill for readable Hebrew and mixed Hebrew/English content. A 
 
 **[Explore the website](https://oriashkenazi.github.io/RTRTL/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
 
-## Let your AI install it
+## Install with your AI agent
 
 Paste into Codex:
 
