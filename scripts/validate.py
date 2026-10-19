@@ -1,6 +1,7 @@
 """Validate public package links, source syntax and synthetic HTML generation offline."""
 import ast
 import json
+from html.parser import HTMLParser
 from pathlib import Path
 import re
 import subprocess
@@ -8,6 +9,17 @@ import sys
 import tempfile
 
 ROOT = Path(__file__).resolve().parent.parent
+
+
+class PageLinks(HTMLParser):
+    def __init__(self):
+        super().__init__()
+        self.targets = []
+
+    def handle_starttag(self, tag, attrs):
+        for name, value in attrs:
+            if name in {'href', 'src'} and value:
+                self.targets.append(value)
 
 
 def validate():
@@ -34,6 +46,14 @@ def validate():
                         continue
                     if not (path.parent / target.split('#')[0]).exists():
                         errors.append(f'Broken link in {path.relative_to(ROOT)}: {target}')
+            if path.suffix == '.html':
+                page = PageLinks()
+                page.feed(body)
+                for target in page.targets:
+                    if re.match(r'^[a-z]+:|^#|^//', target, re.I):
+                        continue
+                    if not (path.parent / target.split('#')[0].split('?')[0]).exists():
+                        errors.append(f'Broken page asset/link in {path.relative_to(ROOT)}: {target}')
     with tempfile.TemporaryDirectory(prefix='rtrtl-fixture-') as output:
         result = subprocess.run([sys.executable, '-S', str(skill / 'scripts' / 'build_fixtures.py'), '--out', output, '--formats', 'html'], capture_output=True, text=True, encoding='utf-8')
         if result.returncode:

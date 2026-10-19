@@ -39,9 +39,12 @@ The [skill](skills/rtrtl/SKILL.md) stays framework-independent. Adapters explain
 python -m unittest discover -s tests -v
 python scripts/validate.py
 node --check docs/assets/app.js
+node tests/test_locale.cjs
 ```
 
 Optional renderer checks and dependencies are documented in [reproducible checks](skills/rtrtl/references/reproducible-checks.md). Generate only the selected format. The website is static HTML/CSS/JS in `docs/`; preview it with `python -m http.server 8765 --directory docs`. GitHub Pages publishes `main:/docs`.
+
+The website has full English and Hebrew editions. Its initial language uses the browser’s configured time zone: Israel opens Hebrew; other time zones open English. An unavailable time zone falls back to Hebrew. A saved manual choice takes priority, and direct language links remain available. This is a local preference heuristic, not physical location detection: no location permission, geolocation API, IP lookup or third-party request is used. `?lang=en` and `?lang=he` choose explicitly, including when browser storage is blocked.
 
 ## Contributions welcome
 
