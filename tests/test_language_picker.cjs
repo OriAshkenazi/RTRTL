@@ -54,9 +54,15 @@ const pickerHrefs = {
   ar:{en:'../index.html?lang=en', he:'../he/index.html?lang=he', ar:'./index.html?lang=ar'}
 };
 const pagePath = {en:'index.html', he:'he/index.html', ar:'ar/index.html'};
+const pickerLabels = {en:'English', he:'עברית', ar:'العربية'};
 for (const language of ['en', 'he', 'ar']) {
   const html = htmlByLanguage[language];
   assert.match(html, new RegExp(`<html lang="${language}" dir="${language === 'en' ? 'ltr' : 'rtl'}">`));
+  const summary = html.match(/<summary>([\s\S]*?)<\/summary>/);
+  assert.ok(summary, `${language}: picker summary exists`);
+  assert.doesNotMatch(summary[1], /\baria-label\s*=/i, `${language}: visible picker label names the summary`);
+  assert.match(summary[1], new RegExp(`<span lang="${language}" dir="${language === 'en' ? 'ltr' : 'rtl'}">${pickerLabels[language]}</span>`), `${language}: picker label matches page language`);
+  assert.match(summary[1], /<svg\b[^>]*aria-hidden="true"/, `${language}: picker chevron stays hidden from assistive technology`);
   assert.ok(html.includes(`<meta property="og:url" content="${canonical[language]}">`), `${language}: canonical URL`);
   for (const target of ['en', 'he', 'ar']) {
     assert.ok(html.includes(`<link rel="alternate" hreflang="${target}" href="${canonical[target]}">`), `${language}: hreflang ${target}`);

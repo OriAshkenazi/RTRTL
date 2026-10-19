@@ -73,4 +73,22 @@ bdi{unicode-bidi:isolate}
 .prompt-top:has(.agent-picker--compact) .copy-button{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .prompt-top .copy-button svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
 
-@media(max-width:450px){.header>nav{display:none}.header{gap:12px}.header-links{gap:10px}}
+/* Extra text spacing may require wrapping without changing the default layout. */
+@media(max-width:450px){
+  .header>nav{display:none}
+  .header{flex-wrap:wrap;gap:12px}
+  .header-links{gap:10px;min-inline-size:0;flex-wrap:wrap}
+  .repo-link{white-space:normal;min-inline-size:0;overflow-wrap:anywhere}
+  .button{min-inline-size:0;overflow-wrap:anywhere}
+  .button>span[aria-hidden=true]{flex-shrink:0}
+  .button>span:not([aria-hidden=true]){min-inline-size:0;flex-shrink:1;overflow-wrap:anywhere}
+  h1,h2,.contribute-heading h2 span,.stack-list h3{min-inline-size:0;overflow-wrap:anywhere}
+  .stack-list>a{grid-template-columns:22px minmax(0,1fr) auto 10px}
+}
+@media(max-width:380px){.right-word{white-space:normal}}
+
+/* Keep authored keyboard focus visible on the dark installation surfaces. */
+.install-section .copy-button:focus-visible,.install-section .text-link:focus-visible{outline-color:#c6b4f5}
+
+/* The explanatory paragraph also crosses the darker end of the RTL gradient. */
+.demo-section .section-intro>p{color:#41483a}
