@@ -14,7 +14,7 @@ const RTRTL_I18N = Object.freeze({
     rtlNote: 'העברית נקראת מימין לשמאל והקודים והערכים שומרים על הסדר הפנימי שלהם. טקסט המקור אינו משתנה.',
     alignmentNote: 'הפסקה מיושרת לימין, אך כיוונה מוגדר משמאל לימין. השוו את הכותרת ואת סימני הפיסוק.',
     copySuccess: 'הועתק. הדביקו בשיחה עם סוכן ה־AI שלכם.',
-    copyFallback: 'העתיקו ידנית את ההנחיה המסומנת.', otherAgent: 'סוכן אחר',
+    copyFallback: 'העתיקו ידנית את הפרומפט המסומן.', otherAgent: 'סוכן אחר',
     usage: 'Then use {skill} for Hebrew and mixed Hebrew/English content.'
   },
   ar: {
