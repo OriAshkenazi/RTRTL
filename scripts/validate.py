@@ -44,11 +44,11 @@ def validate():
                 for target in re.findall(r'\[[^\]]*\]\(([^)\s]+)\)', body):
                     if re.match(r'^[a-z]+:|^#', target, re.I):
                         continue
-                    target_path = Path(target.split('#')[0])
-                    if target_path.is_absolute() and path.is_relative_to(ROOT / 'docs'):
-                        resolved = ROOT / 'docs' / str(target_path).lstrip('/')
+                    target_value = target.split('#')[0]
+                    if target_value.startswith('/') and path.is_relative_to(ROOT / 'docs'):
+                        resolved = ROOT / 'docs' / target_value.lstrip('/')
                     else:
-                        resolved = path.parent / target_path
+                        resolved = path.parent / target_value
                     if not resolved.exists():
                         errors.append(f'Broken link in {path.relative_to(ROOT)}: {target}')
             if path.suffix == '.html':
@@ -57,11 +57,11 @@ def validate():
                 for target in page.targets:
                     if re.match(r'^[a-z]+:|^#|^//', target, re.I):
                         continue
-                    target_path = Path(target.split('#')[0].split('?')[0])
-                    if target_path.is_absolute() and path.is_relative_to(ROOT / 'docs'):
-                        resolved = ROOT / 'docs' / str(target_path).lstrip('/')
+                    target_value = target.split('#')[0].split('?')[0]
+                    if target_value.startswith('/') and path.is_relative_to(ROOT / 'docs'):
+                        resolved = ROOT / 'docs' / target_value.lstrip('/')
                     else:
-                        resolved = path.parent / target_path
+                        resolved = path.parent / target_value
                     if not resolved.exists():
                         errors.append(f'Broken page asset/link in {path.relative_to(ROOT)}: {target}')
     with tempfile.TemporaryDirectory(prefix='rtrtl-fixture-') as output:
