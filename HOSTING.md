@@ -4,7 +4,7 @@
 
 GitHub (`main`) remains the source of truth. The target is Cloudflare Workers Static Assets serving only `docs/`, with no application Worker script. Wrangler is pinned in the repository and needs Node.js 22 or newer. `.github/workflows/validate.yml` runs the required checks. A successful `push` validation for `main` triggers the serialized production deployment workflow, which checks out the exact SHA from that validation run. Pull requests, including forks, never receive production credentials. The migration is not live until the staged deployment passes and DNS and account settings have been cut over and verified; until then, GitHub Pages remains production.
 
-The manual staging workflow accepts a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging` on `workers.dev`. The staging hostname is excluded from search indexing by `_headers`. Review staging before routing production traffic.
+The manual staging workflow accepts a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging`. Use `https://staging.rtrtl.org` for staging; the generated `workers.dev` hostname is also available once Cloudflare activates its certificate. Both staging hostnames are excluded from search indexing by `_headers`. Custom domains are managed in Cloudflare separately from the deployment credentials. Review staging before routing production traffic.
 
 ## One-time GitHub configuration
 

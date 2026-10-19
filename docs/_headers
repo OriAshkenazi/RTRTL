@@ -7,3 +7,6 @@
 
 https://:version.:subdomain.workers.dev/*
   X-Robots-Tag: noindex
+
+https://staging.rtrtl.org/*
+  X-Robots-Tag: noindex
