@@ -24,7 +24,18 @@
   document.addEventListener('click', event => {
     if (!picker.contains(event.target)) close();
   });
-  for (const link of links) link.addEventListener('click', () => {
-    try { window.localStorage.setItem('rtrtl-language', link.dataset.language); } catch { /* URL choice still works. */ }
-  });
+  for (const link of links) {
+    // Keep downloaded editions navigable without a web server.
+    if (window.location.protocol === 'file:') link.href = new URL('index.html', link.href).href;
+    link.addEventListener('click', () => {
+      try { window.localStorage.setItem('rtrtl-language', link.dataset.language); }
+      catch {
+        // Carry the choice through navigation when storage is unavailable.
+        // locale.js removes this fallback parameter once the edition loads.
+        const target = new URL(link.href);
+        target.searchParams.set('lang', link.dataset.language);
+        link.href = target.href;
+      }
+    });
+  }
 })();

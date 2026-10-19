@@ -1,20 +1,22 @@
 ---
-title: "RTRTL — Right to RTL"
-description: "RTRTL — Right to RTL. An open-source RTL skill for Codex, Claude Code, Antigravity and any other coding agent that supports skills."
+title: "RTRTL: Right to RTL"
+description: "RTRTL: Right to RTL. An open-source RTL skill for Codex, Claude Code, Antigravity and any other coding agent that supports skills."
 lang: en
 dir: ltr
 url: https://rtrtl.org/
 ---
 
-THE CHALLENGE: READABLE RIGHT-TO-LEFT TEXT
+RTL AND MIXED-DIRECTION TEXT
 
-Many languages are written from right to left. When your AI agent combines right-to-left and left-to-right text with numbers, codes and punctuation, the reading order can break. Right alignment alone does not fix text direction.
+# Right to left, right from the first draft.
 
-# Give RTL text the right direction.
+An open-source skill that teaches your AI agent to write right-to-left and mixed-direction text the way its readers read it.
 
-RTRTL is an open-source skill for Codex, Claude Code, Antigravity and any other coding agent that supports skills. It helps your AI agent handle text direction from the first draft.
+[Install RTRTL](https://rtrtl.org/#install) · Free · Open source · MIT
 
-[Install with your AI agent](https://rtrtl.org/#install) · Free and open source. MIT licensed.
+As your readers read it
+
+Reader backtracks **0**
 
 ## Right alignment isn’t enough.
 
@@ -22,17 +24,17 @@ Alignment positions a paragraph on the page. Direction controls reading order. F
 
 [Read the skill](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/SKILL.md)
 
-PRJ07 — תוכנית עבודה בעברית
+PRJ07: خطة عمل باللغة العربية
 
-הפרש המדידה: -12.50 mm.
+فرق القياس: -12.50 mm.
 
-הבדיקה הושלמה (QA-17) בהצלחה.
+اكتمل الفحص (QA-17) بنجاح.
 
-Hebrew reads right to left. Codes and values keep their internal order. The original text is unchanged.
+Arabic reads right to left. Codes and values keep their internal order. The original text is unchanged.
 
 ```html
-<p lang="he" dir="rtl">
-  הפרש המדידה: <bdi dir="ltr">-12.50 mm</bdi>.
+<p lang="ar" dir="rtl">
+  فرق القياس: <bdi dir="ltr">-12.50 mm</bdi>.
 </p>
 ```
 
@@ -69,7 +71,7 @@ Ask your AI agent to install RTRTL in Codex, Claude Code, Antigravity or any oth
 
 [Installation guide](https://github.com/OriAshkenazi/RTRTL/blob/main/INSTALL.md)
 
-Install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl into the skills directory supported by this coding agent. Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it. Then use RTRTL for Hebrew and mixed Hebrew/English content.
+Install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl into the skills directory supported by this coding agent. Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it. Then use RTRTL for Arabic and mixed Arabic/English content.
 
 The skill needs no separate account or API key. Installation follows your AI agent’s permissions and skill-directory settings. Use your coding agent’s skill loading or reload instructions after installation.
 
@@ -85,6 +87,8 @@ Test RTRTL with the right-to-left language you use. Add guidance for another for
 - Accessibility
 - Clearer docs
 
-Right to RTL. From the start.
+## The right to right to left
 
 [MIT license](https://github.com/OriAshkenazi/RTRTL/blob/main/LICENSE) · [Credits](https://rtrtl.org/credits.html) · [Source](https://github.com/OriAshkenazi/RTRTL)
+
+Right to RTL. From the start.

@@ -46,6 +46,14 @@ function simulate(language, restored = 'other', deferredCopy = false) {
 (async () => {
   for (const language of ['en', 'he', 'ar']) {
     const page = simulate(language);
+    if (language === 'en') {
+      for (const rtl of [false, true]) {
+        const mode = page.mode(rtl);
+        assert.equal(mode.direction, rtl ? 'rtl' : 'ltr');
+        assert.ok(mode.code.includes('lang="ar"'));
+        assert.doesNotMatch(mode.code + mode.note, /[\u0590-\u05ff]/);
+      }
+    }
     if (language === 'ar') {
       const aligned = page.mode(false);
       assert.equal(aligned.direction, 'ltr');
