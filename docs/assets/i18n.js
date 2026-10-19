@@ -2,12 +2,12 @@
 'use strict';
 const RTRTL_I18N = Object.freeze({
   en: {
-    demoLanguage: 'he', measurementLabel: 'הפרש המדידה: ',
-    rtlNote: 'Hebrew reads right to left. Codes and values keep their internal order. The original text is unchanged.',
+    demoLanguage: 'ar', measurementLabel: 'فرق القياس: ',
+    rtlNote: 'Arabic reads right to left. Codes and values keep their internal order. The original text is unchanged.',
     alignmentNote: 'The paragraph is aligned right, but its direction is left to right. Compare the heading and punctuation.',
     copySuccess: 'Copied. Paste into your AI agent’s chat.',
     copyFallback: 'Copy the selected prompt manually.', otherAgent: 'Other agent',
-    usage: 'Then use {skill} for Hebrew and mixed Hebrew/English content.'
+    usage: 'Then use {skill} for an Arabic and mixed Arabic/English compatibility check. Report any unverified behavior.'
   },
   he: {
     demoLanguage: 'he', measurementLabel: 'הפרש המדידה: ',

@@ -82,6 +82,11 @@ for (const language of ['en', 'he', 'ar']) {
   assert.ok(fs.existsSync(path.join(docs, pagePath[language])), `${language}: page target exists`);
 }
 
+const english = htmlByLanguage.en;
+assert.match(english, /class="arabic demo-text" lang="ar" dir="rtl"/);
+assert.doesNotMatch(english.match(/<main[\s\S]*?<\/main>/)[0], /[\u0590-\u05ff]/);
+assert.match(english, /<title>RTRTL: Right to RTL<\/title>/);
+
 const arabic = htmlByLanguage.ar;
 assert.match(arabic, /class="arabic demo-text" lang="ar" dir="rtl"/);
 assert.match(arabic, /خطة عمل باللغة العربية/);
