@@ -5,7 +5,7 @@ const path = require('node:path');
 const vm = require('node:vm');
 const script = fs.readFileSync(path.join(__dirname, '../docs/assets/app.js'), 'utf8');
 
-function simulate(language, restored = 'other') {
+function simulate(language, restored = 'other', deferredCopy = false) {
   const file = language === 'he' ? '../docs/he/index.html' : '../docs/index.html';
   const html = fs.readFileSync(path.join(__dirname, file), 'utf8');
   const generic = html.match(/<p[^>]*id="install-prompt"[^>]*>([^<]+)<\/p>/)[1];
@@ -16,15 +16,20 @@ function simulate(language, restored = 'other') {
   elements.get('#install-prompt').textContent = generic;
   elements.get('#agent-select').value = restored;
   let copied = null;
+  let finishCopy;
   vm.runInNewContext(script, {
     document:{documentElement:{lang:language}, querySelector(selector) { return elements.get(selector); }},
-    navigator:{clipboard:{async writeText(text) { copied = text; }}}
+    navigator:{clipboard:{async writeText(text) {
+      copied = text;
+      if (deferredCopy) await new Promise(resolve => { finishCopy = resolve; });
+    }}}
   });
   return {
     generic,
     prompt:() => elements.get('#install-prompt').textContent,
     status:() => elements.get('#copy-status').textContent,
     copied:() => copied,
+    finishCopy:() => finishCopy(),
     select(value) {
       elements.get('#agent-select').value = value;
       elements.get('#agent-select').handlers.change();
@@ -56,6 +61,12 @@ function simulate(language, restored = 'other') {
     page.select('toString');
     assert.equal(page.prompt(), page.generic, 'unknown option falls back safely');
     assert.ok(simulate(language, 'claude').prompt().includes('~/.claude/skills/rtrtl'), 'restored selections update on startup');
+    const delayed = simulate(language, 'claude', true);
+    const copying = delayed.copy();
+    delayed.select('antigravity');
+    delayed.finishCopy();
+    await copying;
+    assert.equal(delayed.status(), '', 'late clipboard completion must not confirm a different agent prompt');
   }
   console.log('Installation prompt: all four agents, copy, status reset and restored values passed in both languages');
 })().catch(error => { console.error(error); process.exitCode = 1; });

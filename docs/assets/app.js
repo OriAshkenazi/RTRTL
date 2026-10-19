@@ -45,10 +45,13 @@ updateInstallPrompt();
 document.querySelector('#copy-prompt').addEventListener('click', async () => {
   const prompt = document.querySelector('#install-prompt');
   const status = document.querySelector('#copy-status');
+  const promptAtClick = prompt.textContent.trim();
   try {
-    await navigator.clipboard.writeText(prompt.textContent.trim());
+    await navigator.clipboard.writeText(promptAtClick);
+    if (prompt.textContent.trim() !== promptAtClick) return;
     status.textContent = hebrew ? 'הועתק. הדביקו בשיחה עם סוכן ה־AI שלכם.' : 'Copied. Paste into your AI agent’s chat.';
   } catch {
+    if (prompt.textContent.trim() !== promptAtClick) return;
     // Keep the prompt available when browser clipboard permission is unavailable.
     const range = document.createRange();
     range.selectNodeContents(prompt);
