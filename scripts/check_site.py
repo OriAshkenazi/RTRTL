@@ -35,7 +35,11 @@ def main():
     for path, (status, mime, local) in paths.items():
         try:
             try:
-                response = opener.open(base + path, timeout=30)
+                request = urllib.request.Request(base + path, headers={
+                    "User-Agent": "RTRTL-Deployment-Check/1.0 (+https://github.com/OriAshkenazi/RTRTL)",
+                    "Accept": "*/*",
+                })
+                response = opener.open(request, timeout=30)
             except urllib.error.HTTPError as error:
                 response = error
             with response:
