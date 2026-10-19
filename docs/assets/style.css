@@ -108,47 +108,54 @@ html[dir=rtl] .hero-copy{direction:rtl}
 .hero .hero-actions{align-items:flex-end;margin-block-start:28px;direction:ltr}
 .hero-actions .button,.hero-actions .micro{max-inline-size:100%}
 html[dir=rtl] .hero-actions .button,html[dir=rtl] .hero-actions .micro{direction:rtl}
-/* Three fixed lines; the agent works in a clear margin above the text. */
-.rtl-motion{position:relative;grid-area:visual;direction:ltr;min-inline-size:0;margin:0;border:1px solid var(--line);border-radius:12px;background:#eceee4;box-shadow:0 18px 45px #353a2310;overflow:hidden}
-.rtl-motion-foot{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:14px;padding:15px 20px;font-size:11px}
-.rtl-stage{color:var(--muted)}
-.rtl-motion-page{--paper-right:34px;--working-top:52px;position:relative;min-inline-size:0;padding:28px var(--paper-right) 28px 26px;background:var(--paper);font-family:Arabic,Geist,sans-serif;font-size:clamp(16px,1.6vw,22px);text-align:right;overflow:hidden}
+/* Reading-path demo: native text in logical order; a light traces the order a reader's eye travels. */
+.rtl-motion{position:relative;grid-area:visual;min-inline-size:0;margin:0;border:1px solid var(--line);border-radius:12px;background:#eceee4;box-shadow:0 18px 45px #353a2310;overflow:hidden}
+html[dir=rtl] .rtl-motion{direction:rtl}
+.rtl-motion-bar,.rtl-motion-foot{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;font-size:11px;color:var(--muted)}
+.rtl-motion-bar{border-block-end:1px solid var(--line);min-block-size:50px}
+.rtl-motion-foot{border-block-start:1px solid var(--line);min-block-size:54px}
+.rtl-state{min-inline-size:0;line-height:1.4;transition:color .3s}
+html[lang=en] .rtl-state{font-size:10px;letter-spacing:.07em;text-transform:uppercase}
+.rtl-state.is-ok{color:#4f6634}
+.rtl-langs{display:flex;flex-shrink:0;gap:2px;padding:3px;border-radius:6px;background:#dfe1d6}
+.rtl-langs button{border:0;border-radius:4px;background:transparent;padding:3px 10px;font-size:11px;line-height:1.5}
+.rtl-langs button[lang=ar]{font-family:Arabic,sans-serif}.rtl-langs button[lang=he]{font-family:Hebrew,sans-serif}
+.rtl-langs button[aria-pressed=true]{background:var(--paper)}
+.rtl-motion-paper{position:relative;background:var(--paper);overflow:hidden}
+.rtl-motion-page{position:relative;z-index:1;min-inline-size:0;padding:34px 30px 36px;font-family:Arabic,Geist,sans-serif;font-size:clamp(17px,1.7vw,23px)}
 .rtl-motion-page[lang=he]{font-family:Hebrew,Geist,sans-serif}
-.rtl-motion-page p{position:relative;z-index:1;margin:0 0 20px;line-height:1.7;white-space:nowrap}
+.rtl-motion-page p{position:relative;margin:0 0 24px;line-height:1.9;white-space:nowrap;text-align:start}
 .rtl-motion-page p:last-of-type{margin:0}
 .rtl-motion-title{font-weight:650}
-.rtl-motion-page bdi{white-space:nowrap;border-radius:3px;outline:1px solid transparent;outline-offset:3px}
-.rtl-motion-page .is-unresolved bdi{direction:inherit;unicode-bidi:normal}
-.rtl-motion-page bdi.is-protected{outline-color:#b6a2ed;background:#eee8fa}
-.rtl-motion-page .is-focused::before{content:"";position:absolute;inset:-5px -8px;border-radius:4px;background:#dce9c32b;z-index:-1}
-.rtl-paper-frame{position:absolute;inset:16px 9px 13px;z-index:0;border:1px solid #d8dccf;border-radius:8px;background:linear-gradient(150deg,#ffffff36,transparent 60%);pointer-events:none;opacity:0}
-.rtl-motion.is-finished .rtl-paper-frame{opacity:0}
-.rtl-reading-edge{position:absolute;inset:47px 9px 24px auto;inline-size:2px;border-radius:2px;background:#a5b68b;transform:scaleY(0);transform-origin:top;opacity:0}
-.rtl-agent{position:absolute;inset:0 auto auto 0;z-index:3;padding:2px 7px;border-radius:4px;background:var(--ink);color:var(--mint);font:10px/1.6 Geist,sans-serif;pointer-events:none;white-space:nowrap;opacity:0;box-shadow:0 2px 5px #22251f20}
-.rtl-agent-dot{position:absolute;inset:auto 5px -4px auto;inline-size:4px;block-size:4px;border-radius:50%;background:#5b713d}
-.rtl-inspection{position:absolute;top:42px;bottom:20px;inline-size:1px;background:#8b9b71;box-shadow:3px 0 12px #a3b68050;opacity:0;pointer-events:none;z-index:2}
-.rtl-motion-page p::after{content:"✓";position:absolute;right:calc(18px - var(--paper-right));top:0;color:#5f7843;font:11px/2 Geist,sans-serif;opacity:0}
-.rtl-motion-page .is-checked::after,.rtl-motion.is-finished p::after{opacity:1}
-.rtl-motion-foot{border-block-start:1px solid var(--line);min-block-size:60px}
-.rtl-stage{min-inline-size:0;flex:1;font-size:10px;line-height:1.5}
-.rtl-motion-controls{display:flex;gap:15px;direction:inherit;align-items:center;flex-shrink:0}
-.rtl-replay,.rtl-pause{border:0;border-block-end:1px solid currentColor;background:none;padding:4px 0;font-size:11px}
+.rtl-motion-page.is-broken bdi{unicode-bidi:normal;direction:inherit}
+.rtl-motion-page:not(.is-broken) .w{display:inline-block}
+.rtl-motion-page bdi{border-radius:4px;transition:background .5s,box-shadow .5s}
+.rtl-motion-page.is-lit bdi,.rtl-motion-page bdi.is-lit{background:#eee8fa;box-shadow:0 0 0 3px #eee8fa}
+.rtl-path{position:absolute;inset:0;inline-size:100%;block-size:100%;z-index:2;pointer-events:none;overflow:visible}
+.rtl-path .seg{fill:none;stroke-width:2.6;stroke-linecap:round;transition:stroke .25s,opacity .6s}
+.rtl-path .fwd{stroke:#5f7843}.rtl-path .isl{stroke:#7d64d6}.rtl-path .back{stroke:#d2557f;stroke-width:3}
+.rtl-path.is-resting .seg{opacity:.28}
+.rtl-path .flash{fill:none;stroke:#d2557f;stroke-width:2}
+.rtl-path .eye{fill:#6650b1}.rtl-path .halo{fill:#8f7fd680}
+.rtl-sweep{position:absolute;inset-block:0;inline-size:38%;left:100%;z-index:0;pointer-events:none;background:linear-gradient(90deg,transparent,#d9f68199 45%,#d9f68199 55%,transparent);opacity:0}
+.rtl-count{min-inline-size:0;font-variant-numeric:tabular-nums;line-height:1.4}
+.rtl-count b{display:inline-block;min-inline-size:1.2ch;text-align:center;font-weight:650;color:#b8436b;transition:color .3s}
+.rtl-count.is-zero b{color:#4f6634}
+.rtl-motion-controls{display:flex;gap:15px;align-items:center;flex-shrink:0}
+.rtl-replay,.rtl-pause{border:0;border-block-end:1px solid currentColor;background:none;padding:3px 0;font-size:11px;color:var(--ink)}
 .rtl-pause[hidden]{display:none}
-.rtl-replay:hover,.rtl-pause:hover{color:var(--ink)}
-@media(max-width:1000px){.hero-layout{gap:32px}.hero h1,html[lang=he] .hero h1{font-size:clamp(40px,5.2vw,60px)}.rtl-motion-page{--paper-right:30px;padding-left:22px;font-size:16px}}
+@media(max-width:1000px){.hero-layout{gap:32px}.hero h1,html[lang=he] .hero h1{font-size:clamp(40px,5.2vw,60px)}.rtl-motion-page{padding-inline:22px;font-size:16px}}
 @media(max-width:700px){
   .hero-layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "visual";gap:28px;padding-block:26px 35px}
   .hero h1,html[lang=he] .hero h1{font-size:clamp(44px,9.3vw,64px)}
   .hero-summary{font-size:16px}.hero .hero-actions{inline-size:auto;align-items:flex-end}.hero-actions .button{inline-size:auto}
   .rtl-motion{inline-size:100%;max-inline-size:360px;justify-self:center}
-  .rtl-motion-foot{padding:9px 14px;font-size:10px;gap:8px}
-  .rtl-motion-page{--working-top:42px;padding:24px var(--paper-right) 24px 16px;font-size:clamp(11.5px,3.8vw,13px)}
-  .rtl-motion-page p{margin-block-end:14px;line-height:1.6}.rtl-motion-page p:last-of-type{margin-block-end:0}
-  .rtl-motion-foot{min-block-size:51px}.rtl-stage{font-size:9px}
+  .rtl-motion-bar,.rtl-motion-foot{padding:9px 14px;font-size:10px;gap:8px}
+  .rtl-motion-bar{min-block-size:44px}.rtl-motion-foot{min-block-size:48px}
+  .rtl-motion-page{padding:26px 16px 28px;font-size:clamp(12.5px,3.9vw,14px)}
+  .rtl-motion-page p{margin-block-end:16px;line-height:1.75}
+  .rtl-langs button{padding:2px 7px;font-size:10px}
   .rtl-motion-controls{gap:10px}.rtl-replay,.rtl-pause{font-size:10px;padding:2px 0}
-  .rtl-agent{font-size:9px;padding:1px 6px}
-  .rtl-reading-edge{inset-block-start:38px}.rtl-inspection{top:38px}
-  .rtl-motion-page p::after{font-size:10px}
 }
 
 /* A separate scroll beat; the phrase stays English in all three editions. */
@@ -180,7 +187,7 @@ html[dir=rtl] .hero-actions .button,html[dir=rtl] .hero-actions .micro{direction
 html[lang=en] .hero{direction:ltr;text-align:left}
 html[lang=en] .hero-copy{direction:ltr;text-align:left}
 html[lang=en] .hero .hero-actions{align-items:flex-start}
-html[lang=en] .rtl-motion-foot{direction:ltr}
+html[lang=en] .rtl-motion-bar,html[lang=en] .rtl-motion-foot{direction:ltr}
 
 /* Short desktop windows use tighter type and gaps rather than hiding the continuation. */
 @media(min-width:1001px) and (max-height:740px){
@@ -197,3 +204,6 @@ html[lang=en] .rtl-motion-foot{direction:ltr}
   .demo-section{padding-block-start:28px}
   .demo-preview-label{margin-block-end:clamp(88px,12svh,132px)}
 }
+
+/* Balance the English headline so its last word never sits alone. */
+html[lang=en] .hero h1{text-wrap:balance}

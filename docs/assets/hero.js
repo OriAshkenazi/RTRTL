@@ -1,166 +1,311 @@
 'use strict';
 
-// Story: establish direction, preserve whole LTR scopes, inspect the result.
-// The same native paragraphs remain editable and in logical Unicode order.
+// Story: a reader's eye trips through text set in the wrong paragraph direction.
+// RTRTL sets the direction, every word moves to its place and the eye reads straight through.
+// The paragraphs stay native text in logical Unicode order; only `dir` changes.
+const NS = 'http://www.w3.org/2000/svg';
+let demoCount = 0;
+
 for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
+  const paper = demo.querySelector('.rtl-motion-paper');
   const page = demo.querySelector('.rtl-motion-page');
-  const rows = [...page.querySelectorAll('p')];
-  const scopes = [...page.querySelectorAll('bdi')];
-  const original = rows.map(row => row.textContent);
-  const caption = demo.querySelector('.rtl-stage');
-  const agent = demo.querySelector('.rtl-agent');
+  const state = demo.querySelector('.rtl-state');
+  const count = demo.querySelector('.rtl-count');
+  const tally = count.querySelector('b');
+  const tail = count.querySelector('.rtl-count-tail');
   const pause = demo.querySelector('.rtl-pause');
   const replay = demo.querySelector('.rtl-replay');
   const reduced = matchMedia('(prefers-reduced-motion: reduce)');
-  const frame = document.createElement('div');
-  frame.className = 'rtl-paper-frame';
-  page.append(frame);
-  const guide = document.createElement('span');
-  guide.className = 'rtl-reading-edge';
-  page.append(guide);
-  const scan = document.createElement('span');
-  scan.className = 'rtl-inspection';
-  page.append(scan);
+  const glowId = `rtl-glow-${++demoCount}`;
+  const docs = {[page.lang]: page.innerHTML};
+  for (const template of demo.querySelectorAll('template[data-lang]')) docs[template.dataset.lang] = template.innerHTML;
+  const sweep = document.createElement('span');
+  sweep.className = 'rtl-sweep';
+  paper.append(sweep);
 
-  let sequence = 0;
-  let active = [];
-  let paused = false;
-  let observer;
+  let run = 0;
+  let svg;
+  let segments = [];
+  let eye = [];
+  let pausedAt = null;
+  let offset = 0;
   let started = false;
-  const agentY = 6;
-  const marker = x => `translate(${Math.max(8,Math.min(page.clientWidth-agent.offsetWidth-8,x))}px,${agentY}px)`;
+  let observer;
 
-  async function motion(entries,duration) {
-    active = entries.map(([element,frames]) => element.animate(frames,{duration,easing:'ease-in-out',fill:'both'}));
-    if (paused) for (const animation of active) animation.pause();
-    await Promise.all(active.map(animation => animation.finished));
-    // Persist final values before releasing the animation, including pause state.
-    for (const animation of active) animation.commitStyles();
-    for (const animation of active) animation.cancel();
-    active = [];
+  // A pausable clock drives every frame loop and wait.
+  const clock = () => (pausedAt ?? performance.now()) - offset;
+  const live = id => id === run;
+  const frames = (ms, draw, id) => new Promise(resolve => {
+    const start = clock();
+    const step = () => {
+      if (!live(id)) return resolve(false);
+      const t = ms ? Math.min(1, (clock() - start) / ms) : 1;
+      draw?.(t);
+      if (t < 1) requestAnimationFrame(step); else resolve(true);
+    };
+    requestAnimationFrame(step);
+  });
+  const wait = (ms, id) => frames(ms, null, id);
+  const ease = t => t < .5 ? 2 * t * t : 1 - Math.pow(-2 * t + 2, 2) / 2;
+
+  const rows = () => [...page.querySelectorAll('p')];
+  const words = () => rows().map(row => [...row.querySelectorAll('.w')]);
+  function setDirection(broken) {
+    page.classList.toggle('is-broken', broken);
+    for (const row of rows()) row.dir = broken ? 'ltr' : 'rtl';
   }
-  const hold = duration => motion([[agent,[{opacity:1},{opacity:1}]]],duration);
-  function clearEffects() {
-    for (const animation of active) animation.cancel();
-    active = [];
-    for (const element of [page,agent,frame,guide,scan,...rows,...scopes]) element.removeAttribute('style');
-    for (const row of rows) row.classList.remove('is-focused','is-checked');
-    for (const scope of scopes) scope.classList.remove('is-protected');
+  function points() {
+    const base = paper.getBoundingClientRect();
+    return words().map(line => line.map(word => {
+      const box = word.getBoundingClientRect();
+      return {x: box.left + box.width / 2 - base.left, y: box.bottom - base.top + 2, code: word.closest('bdi')};
+    }));
   }
-  function settled() {
-    clearEffects();
-    paused = false;
+  // Reading moves right to left between words and left to right inside one Latin code.
+  function judge(a, b) {
+    const island = Boolean(a.code) && a.code === b.code;
+    const dx = b.x - a.x;
+    return {island, wrong: island ? dx < -1 : dx > 1};
+  }
+  function arc(a, b, wrong) {
+    const lift = Math.min(wrong ? 26 : 16, 6 + Math.abs(b.x - a.x) * (wrong ? .16 : .09));
+    return `M${a.x} ${a.y} Q${(a.x + b.x) / 2} ${a.y + lift} ${b.x} ${b.y}`;
+  }
+  function buildPath() {
+    svg?.remove();
+    svg = document.createElementNS(NS, 'svg');
+    svg.setAttribute('class', 'rtl-path');
+    svg.setAttribute('aria-hidden', 'true');
+    const defs = document.createElementNS(NS, 'defs');
+    const filter = document.createElementNS(NS, 'filter');
+    filter.id = glowId;
+    for (const [name, value] of [['x', '-200%'], ['y', '-200%'], ['width', '500%'], ['height', '500%']]) filter.setAttribute(name, value);
+    const blur = document.createElementNS(NS, 'feGaussianBlur');
+    blur.setAttribute('stdDeviation', '4');
+    filter.append(blur);
+    defs.append(filter);
+    svg.append(defs);
+    segments = words().map(line => line.slice(1).map(() => {
+      const path = document.createElementNS(NS, 'path');
+      path.setAttribute('class', 'seg');
+      path.style.opacity = '0';
+      svg.append(path);
+      return path;
+    }));
+    eye = [['halo', 11], ['eye', 4.5]].map(([name, radius]) => {
+      const circle = document.createElementNS(NS, 'circle');
+      circle.setAttribute('class', name);
+      circle.setAttribute('r', radius);
+      circle.style.opacity = '0';
+      svg.append(circle);
+      return circle;
+    });
+    eye[0].setAttribute('filter', `url(#${glowId})`);
+    paper.append(svg);
+  }
+  // Redraws the thread from the words' live positions and returns the backward jumps.
+  function update(pts) {
+    let wrong = 0;
+    pts.forEach((line, li) => line.slice(1).forEach((b, i) => {
+      const a = line[i];
+      const verdict = judge(a, b);
+      const path = segments[li][i];
+      if (verdict.wrong) wrong++;
+      path.setAttribute('d', arc(a, b, verdict.wrong));
+      path.setAttribute('class', `seg ${verdict.wrong ? 'back' : verdict.island ? 'isl' : 'fwd'}`);
+    }));
+    return wrong;
+  }
+  function setTally(n, pop) {
+    if (tally.textContent !== String(n)) {
+      tally.textContent = n;
+      if (pop) tally.animate([{transform: 'scale(1.7)'}, {transform: 'none'}], {duration: 300, easing: 'ease-out'});
+    }
+    count.classList.toggle('is-zero', n === 0);
+  }
+  function moveEye(x, y) {
+    for (const circle of eye) {
+      circle.setAttribute('cx', x);
+      circle.setAttribute('cy', y);
+      circle.style.opacity = '1';
+    }
+  }
+  function flash(x, y) {
+    const ring = document.createElementNS(NS, 'circle');
+    ring.setAttribute('class', 'flash');
+    ring.setAttribute('cx', x);
+    ring.setAttribute('cy', y);
+    svg.append(ring);
+    ring.animate([{r: 3, opacity: 1}, {r: 18, opacity: 0}], {duration: 520, easing: 'ease-out'}).finished.then(() => ring.remove(), () => ring.remove());
+  }
+  function setState(key, ok) {
+    state.textContent = state.dataset[key];
+    state.classList.toggle('is-ok', ok);
+  }
+
+  // The eye reads each line in logical order and draws the thread behind it.
+  async function read(id, stumble) {
+    let backtracks = 0;
+    const pts = points();
+    update(pts);
+    const lines = rows();
+    for (const [li, line] of pts.entries()) {
+      moveEye(line[0].x, line[0].y);
+      if (!stumble && line[0].code) line[0].code.classList.add('is-lit');
+      if (!await wait(li ? 120 : 220, id)) return false;
+      for (let i = 1; i < line.length; i++) {
+        const path = segments[li][i - 1];
+        const length = path.getTotalLength();
+        const wrong = path.classList.contains('back');
+        path.style.opacity = '1';
+        path.style.strokeDasharray = length;
+        path.style.strokeDashoffset = length;
+        const ok = await frames(wrong && stumble ? 300 : stumble ? 190 : 150, t => {
+          const point = path.getPointAtLength(length * ease(t));
+          moveEye(point.x, point.y);
+          path.style.strokeDashoffset = length * (1 - ease(t));
+        }, id);
+        if (!ok) return false;
+        path.style.strokeDasharray = '';
+        path.style.strokeDashoffset = '';
+        // On the clean read, each Latin code lights up as the eye enters it.
+        if (!stumble && line[i].code) line[i].code.classList.add('is-lit');
+        if (wrong && stumble) {
+          flash(line[i].x, line[i].y);
+          setTally(++backtracks, true);
+          lines[li].animate([{transform: 'none'}, {transform: 'translateX(-3px)'}, {transform: 'translateX(3px)'}, {transform: 'none'}], {duration: 220});
+          if (!await wait(140, id)) return false;
+        }
+      }
+    }
+    for (const circle of eye) circle.animate([{opacity: 1}, {opacity: 0}], {duration: 300, fill: 'forwards'});
+    return true;
+  }
+
+  // A right-to-left wave: each word lifts as it passes and lands in place while the thread pulls straight.
+  async function untangle(id) {
+    const from = words().flat().map(word => word.getBoundingClientRect());
+    setDirection(false);
+    const to = words().flat();
+    const base = paper.getBoundingClientRect();
+    const width = paper.clientWidth;
+    setState('fixing', false);
+    sweep.animate([{left: '100%', opacity: 0}, {opacity: 1, offset: .15}, {opacity: 1, offset: .8}, {left: '-38%', opacity: 0}], {duration: 1150, easing: 'cubic-bezier(.45,0,.3,1)'});
+    const flights = to.map((word, i) => {
+      const box = word.getBoundingClientRect();
+      const dx = from[i].left - box.left;
+      const dy = from[i].top - box.top;
+      // The wave reaches words on the right first.
+      const delay = Math.max(0, (width - (Math.max(from[i].right, box.right) - base.left)) / width) * 620 + 60;
+      return word.animate([
+        {transform: `translate(${dx}px,${dy}px)`},
+        {transform: `translate(${dx}px,${dy - 16}px) scale(1.07)`, offset: .22},
+        {transform: `translate(${dx * .2}px,-6px) scale(1.04)`, offset: .75},
+        {transform: 'none'}
+      ], {duration: 820, delay, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'backwards'});
+    });
+    let landed = false;
+    Promise.all(flights.map(flight => flight.finished)).then(() => { landed = true; }, () => {});
+    // Follow the flying words every frame; the tally falls as segments turn forward.
+    return new Promise(resolve => {
+      const step = () => {
+        if (!live(id)) return resolve(false);
+        setTally(update(points()), false);
+        if (landed) resolve(true); else requestAnimationFrame(step);
+      };
+      requestAnimationFrame(step);
+    });
+  }
+
+  function resetMotion() {
+    for (const animation of demo.getAnimations({subtree: true})) animation.cancel();
+    pausedAt = null;
     pause.hidden = true;
     pause.textContent = pause.dataset.pause;
-    page.dir = 'rtl';
-    page.classList.add('is-correct');
-    for (const row of rows) { row.dir='rtl'; row.classList.remove('is-unresolved'); }
-    demo.classList.remove('is-running');
-    demo.classList.add('is-finished');
-    demo.dataset.phase = 'done';
-    caption.textContent = caption.dataset.done;
+    page.classList.remove('is-lit');
+    for (const code of page.querySelectorAll('bdi')) code.classList.remove('is-lit');
   }
-  function preserved() {
-    return rows.every((row,index) => row.textContent===original[index] && row.dir==='rtl') &&
-      scopes.every(scope => getComputedStyle(scope).direction==='ltr' && getComputedStyle(scope).unicodeBidi==='isolate');
+  function settled() {
+    resetMotion();
+    setDirection(false);
+    buildPath();
+    setTally(update(points()), false);
+    for (const path of segments.flat()) path.style.opacity = '';
+    svg.classList.add('is-resting');
+    page.classList.add('is-lit');
+    tail.textContent = tail.dataset.tail;
+    setState('fixed', true);
+    demo.dataset.phase = 'done';
   }
   async function play() {
     started = true;
     observer?.disconnect();
-    const current = ++sequence;
-    settled();
-    if (reduced.matches || !page.animate || !Animation.prototype.commitStyles) return;
-    demo.classList.remove('is-finished');
-    demo.classList.add('is-running');
-    demo.dataset.phase = 'observe';
+    const id = ++run;
+    resetMotion();
+    if (reduced.matches || !page.animate) { settled(); return; }
+    setDirection(true);
+    buildPath();
+    setTally(0, false);
+    tail.textContent = '';
+    setState('broken', false);
     pause.hidden = false;
-    page.classList.remove('is-correct');
-    // Deliberately wrong paragraph direction; source characters are unchanged.
-    for (const row of rows) { row.dir='ltr'; row.classList.add('is-unresolved'); }
-    caption.textContent = caption.dataset.direction;
-    agent.style.transform = marker(8);
-    agent.style.opacity = '0';
-    const restingTop = getComputedStyle(page).paddingBlockStart;
-    const workingTop = getComputedStyle(page).getPropertyValue('--working-top').trim();
+    demo.dataset.phase = 'stumble';
     try {
-      await motion([[agent,[{opacity:0},{opacity:0}]]],750);
-      demo.dataset.phase = 'direction';
-      // Card expansion, inner frame and agent share one timeline.
-      const appear = [{opacity:0},{opacity:1}];
-      await motion([
-        [agent,appear.map((keyframe,index)=>({...keyframe,transform:marker(index ? page.clientWidth-60 : 8)}))],
-        [frame,appear.map((keyframe,index)=>({...keyframe,top:`${Number.parseFloat(index ? workingTop : restingTop)-12}px`}))],
-        [page,[{paddingBlockStart:restingTop},{paddingBlockStart:workingTop}]],
-        [guide,[{transform:'scaleY(0)',opacity:0},{transform:'scaleY(1)',opacity:1}]]
-      ],1250);
-      await hold(450);
-      demo.dataset.phase = 'scopes';
-      caption.textContent = caption.dataset.scopes;
-      // Each visit is one paragraph-level correction, preserving complete scopes.
-      for (const row of rows) {
-        if (current!==sequence) return;
-        const scope = row.querySelector('bdi');
-        const box = scope.getBoundingClientRect();
-        const origin = page.getBoundingClientRect();
-        const from = agent.style.transform;
-        const to = marker(box.left-origin.left+box.width/2-agent.offsetWidth/2);
-        await motion([[agent,[{transform:from},{transform:to}]]],550);
-        row.classList.add('is-focused');
-        for (const run of row.querySelectorAll('bdi')) run.classList.add('is-protected');
-        await hold(350);
-        // Resolve at zero opacity: old and new glyphs can never cross or overlap.
-        await motion([[row,[{opacity:1},{opacity:0}]]],180);
-        row.dir = 'rtl';
-        row.classList.remove('is-unresolved');
-        const finalBox = scope.getBoundingClientRect();
-        const finalMarker = marker(finalBox.left-origin.left+finalBox.width/2-agent.offsetWidth/2);
-        await motion([
-          [row,[{opacity:0},{opacity:1}]],
-          [agent,[{transform:agent.style.transform},{transform:finalMarker}]]
-        ],420);
-        await hold(350);
-        row.classList.remove('is-focused');
-      }
-      demo.dataset.phase = 'inspect';
-      caption.textContent = caption.dataset.check;
-      // Scan the actual rendered page, then verify the actual native structure.
-      await motion([
-        [scan,[{left:'calc(100% - 16px)',opacity:0},{left:'calc(100% - 16px)',opacity:1,offset:.12},{left:'16px',opacity:1,offset:.88},{left:'16px',opacity:0}]],
-        [agent,[{transform:agent.style.transform},{transform:marker(8)}]]
-      ],1250);
-      if (!preserved()) throw new Error('Hero demo did not preserve native text/direction');
-      for (const row of rows) row.classList.add('is-checked');
-      await hold(800);
-      const disappear = [{opacity:1},{opacity:0}];
-      await motion([
-        [frame,disappear.map((keyframe,index)=>({...keyframe,top:`${Number.parseFloat(index ? restingTop : workingTop)-12}px`}))],
-        [page,[{paddingBlockStart:workingTop},{paddingBlockStart:restingTop}]],
-        [agent,disappear],
-        [guide,[{opacity:1},{opacity:0}]],
-        ...scopes.map(scope=>[scope,[{outlineColor:'#b6a2ed',backgroundColor:'#eee8fa'},{outlineColor:'transparent',backgroundColor:'transparent'}]])
-      ],650);
-      if (current===sequence) settled();
+      if (!await wait(500, id)) return;
+      if (!await read(id, true)) return;
+      if (!await wait(700, id)) return;
+      demo.dataset.phase = 'untangle';
+      if (!await untangle(id)) return;
+      setState('fixed', true);
+      demo.dataset.phase = 'read';
+      for (const path of segments.flat()) path.style.opacity = '.35';
+      if (!await wait(350, id)) return;
+      if (!await read(id, false)) return;
+      if (!await wait(500, id)) return;
+      settled();
     } catch (error) {
-      if (current!==sequence) return;
-      // Cancellation is normal for replay, resize and reduced-motion changes.
-      if (error.name!=='AbortError') console.error(error);
+      if (!live(id)) return;
+      console.error(error);
       settled();
     }
   }
-  pause.addEventListener('click',()=>{
-    paused=!paused;
-    pause.textContent=paused ? pause.dataset.resume : pause.dataset.pause;
-    for (const animation of active) paused ? animation.pause() : animation.play();
+
+  pause.addEventListener('click', () => {
+    const animations = demo.getAnimations({subtree: true});
+    if (pausedAt === null) {
+      pausedAt = performance.now();
+      for (const animation of animations) animation.pause();
+      pause.textContent = pause.dataset.resume;
+    } else {
+      offset += performance.now() - pausedAt;
+      pausedAt = null;
+      for (const animation of animations) animation.play();
+      pause.textContent = pause.dataset.pause;
+    }
   });
-  replay.addEventListener('click',play);
-  reduced.addEventListener('change',()=>{++sequence;settled();});
-  window.addEventListener('resize',()=>{++sequence;settled();},{passive:true});
-  document.fonts.ready.then(()=>{
+  replay.addEventListener('click', play);
+  for (const button of demo.querySelectorAll('.rtl-langs button')) {
+    button.addEventListener('click', () => {
+      ++run;
+      for (const other of demo.querySelectorAll('.rtl-langs button')) other.setAttribute('aria-pressed', String(other === button));
+      page.lang = button.dataset.lang;
+      page.innerHTML = docs[button.dataset.lang];
+      play();
+    });
+  }
+  reduced.addEventListener('change', () => { ++run; settled(); });
+  let resizeTimer;
+  window.addEventListener('resize', () => {
+    if (!started) return;
+    clearTimeout(resizeTimer);
+    resizeTimer = setTimeout(() => { ++run; settled(); }, 150);
+  }, {passive: true});
+  document.fonts.ready.then(() => {
     if (started) return;
-    if (!('IntersectionObserver' in window)) { play(); return; }
-    observer=new IntersectionObserver(entries=>{
-      if (entries.some(entry=>entry.isIntersecting)) play();
-    },{threshold:.5});
+    if (reduced.matches || !('IntersectionObserver' in window)) { play(); return; }
+    observer = new IntersectionObserver(entries => {
+      if (entries.some(entry => entry.isIntersecting)) play();
+    }, {threshold: .5});
     observer.observe(demo);
   });
 }
