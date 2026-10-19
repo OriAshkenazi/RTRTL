@@ -43,7 +43,7 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
   function clearEffects() {
     for (const animation of active) animation.cancel();
     active = [];
-    for (const element of [agent,frame,guide,scan,...rows,...scopes]) element.removeAttribute('style');
+    for (const element of [page,agent,frame,guide,scan,...rows,...scopes]) element.removeAttribute('style');
     for (const row of rows) row.classList.remove('is-focused','is-checked');
     for (const scope of scopes) scope.classList.remove('is-protected');
   }
@@ -80,14 +80,17 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     caption.textContent = caption.dataset.direction;
     agent.style.transform = marker(8);
     agent.style.opacity = '0';
+    const restingTop = getComputedStyle(page).paddingBlockStart;
+    const workingTop = getComputedStyle(page).getPropertyValue('--working-top').trim();
     try {
       await motion([[agent,[{opacity:0},{opacity:0}]]],750);
       demo.dataset.phase = 'direction';
-      // Agent and frame share one entrance, with identical opacity timing.
+      // Card expansion, inner frame and agent share one timeline.
       const appear = [{opacity:0},{opacity:1}];
       await motion([
         [agent,appear.map((keyframe,index)=>({...keyframe,transform:marker(index ? page.clientWidth-60 : 8)}))],
-        [frame,appear],
+        [frame,appear.map((keyframe,index)=>({...keyframe,top:`${Number.parseFloat(index ? workingTop : restingTop)-12}px`}))],
+        [page,[{paddingBlockStart:restingTop},{paddingBlockStart:workingTop}]],
         [guide,[{transform:'scaleY(0)',opacity:0},{transform:'scaleY(1)',opacity:1}]]
       ],1250);
       await hold(450);
@@ -130,7 +133,8 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
       await hold(800);
       const disappear = [{opacity:1},{opacity:0}];
       await motion([
-        [frame,disappear],
+        [frame,disappear.map((keyframe,index)=>({...keyframe,top:`${Number.parseFloat(index ? restingTop : workingTop)-12}px`}))],
+        [page,[{paddingBlockStart:workingTop},{paddingBlockStart:restingTop}]],
         [agent,disappear],
         [guide,[{opacity:1},{opacity:0}]],
         ...scopes.map(scope=>[scope,[{outlineColor:'#b6a2ed',backgroundColor:'#eee8fa'},{outlineColor:'transparent',backgroundColor:'transparent'}]])
