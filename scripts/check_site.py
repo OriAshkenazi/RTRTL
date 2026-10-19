@@ -55,6 +55,8 @@ def main():
                 failed = [key for key, passed in checks.items() if not passed]
                 if failed:
                     failures.append(f"{path}: {', '.join(failed)}")
+                    if response.status != status:
+                        print(f"Unexpected response: server={response.headers.get('Server')}, ray={response.headers.get('CF-Ray')}, body={body[:200]!r}", flush=True)
                 print(f"{response.status} {path}: {'FAIL ' + ', '.join(failed) if failed else 'PASS'}", flush=True)
         except Exception as error:
             failures.append(f"{path}: {type(error).__name__}: {error}")
