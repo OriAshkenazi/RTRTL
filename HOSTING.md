@@ -1,10 +1,10 @@
 # RTRTL hosting and deployment
 
-## Target architecture and current state
+## Architecture and current state
 
-GitHub (`main`) remains the source of truth. The target is Cloudflare Workers Static Assets serving only `docs/`, with no application Worker script. Wrangler is pinned in the repository and needs Node.js 22 or newer. `.github/workflows/validate.yml` runs the required checks. A successful `push` validation for `main` triggers the serialized production deployment workflow, which checks out the exact SHA from that validation run. Pull requests, including forks, never receive production credentials. The migration is not live until the staged deployment passes and DNS and account settings have been cut over and verified; until then, GitHub Pages remains production.
+GitHub (`main`) remains the source of truth. Cloudflare Workers Static Assets serves only `docs/`, with no application Worker script. Wrangler is pinned in the repository and needs Node.js 22 or newer. `.github/workflows/validate.yml` runs the required checks. A successful `push` validation for `main` triggers the serialized production deployment workflow, which checks out the exact SHA from that validation run. Pull requests, including forks, never receive production credentials. Production moved to Cloudflare on 2026-10-19 after staging validation. Both `rtrtl.org` and `www.rtrtl.org` are proxied Worker custom domains; HTTPS `www` permanently redirects to the apex with path and query preserved. HTTP first redirects to HTTPS. GitHub Pages is retained temporarily as a rollback option and no longer receives domain traffic. Each production deployment runs public route, content, MIME and security-header checks, with bounded retries for edge propagation.
 
-The manual staging workflow accepts a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging`. Use `https://staging.rtrtl.org` for staging; the generated `workers.dev` hostname is also available once Cloudflare activates its certificate. Both staging hostnames are excluded from search indexing by `_headers`. Custom domains are managed in Cloudflare separately from the deployment credentials. Review staging before routing production traffic.
+The staging workflow runs on pushes to `cloudflare-workers-migration`; manual dispatch also accepts a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging`. Use `https://staging.rtrtl.org` for staging; the generated `workers.dev` hostname is also available once Cloudflare activates its certificate. Both staging hostnames are excluded from search indexing by `_headers`. Custom domains are managed in Cloudflare separately from the deployment credentials. Review staging before routing production traffic.
 
 ## One-time GitHub configuration
 
@@ -30,3 +30,13 @@ Until production verification is complete, preserve the prior GitHub Pages custo
 ## Operational controls
 
 Workers Static Assets supplies MIME types and default browser revalidation (`Cache-Control: public, max-age=0, must-revalidate` with ETags). Keep HTML and changing JS/CSS on revalidation. Add immutable browser caching only when filenames contain a content fingerprint. Cloudflare account-level settings and dashboard-created resources must be recorded in private operational evidence, not committed as credentials.
+
+## Verified account configuration (2026-10-19)
+
+DNSSEC is active. Cloudflare's Free Managed WAF Ruleset and HTTP DDoS protection are active. Minimum TLS is 1.2, TLS 1.3 is enabled, encryption mode is Full (strict), and Always Use HTTPS is enabled. HSTS starts at one month with includeSubDomains and preload disabled. Keep valid HTTPS available during any rollback until cached HSTS expires.
+
+The production-only, cookie-free Web Analytics script loaded successfully and its RUM endpoint returned HTTP 204 in a real browser. CSP is enforced after browser checks showed no violations with the policy in report-only mode. Locale selection remains client-only. Search and AI crawler policies allow access; Bot Fight Mode and catch-all email are disabled.
+
+`hello@rtrtl.org` forwards to the owner's verified destination. MX, SPF, Cloudflare DKIM and reject-policy DMARC are configured. This establishes inbound forwarding only; delivery to the destination inbox still requires an end-to-end email test. The private operational evidence records the destination and account identifiers.
+
+The first production deployment passed all 14 original smoke routes against committed Git blobs, including all three language pages and the real 404; the smoke checker now also covers the analytics loader. Desktop and narrow-width interactions were checked locally. Public staging passed checks on GitHub's runner; this machine's network filter blocked browsing the staging hostname. Production was accessible in the browser.

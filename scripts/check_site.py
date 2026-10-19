@@ -23,6 +23,7 @@ def main():
         "/he/index.html?lang=he": (200, "text/html", "he/index.html"),
         "/credits.html": (200, "text/html", "credits.html"),
         "/he/credits.html": (200, "text/html", "he/credits.html"),
+        "/assets/analytics.js": (200, "javascript", "assets/analytics.js"),
         "/assets/app.js": (200, "javascript", "assets/app.js"),
         "/assets/locale.js": (200, "javascript", "assets/locale.js"),
         "/assets/i18n.js": (200, "javascript", "assets/i18n.js"),
@@ -45,10 +46,14 @@ def main():
                 response = error
             with response:
                 body = response.read()
+                expected_body = (docs / local).read_bytes()
+                # Git text checkout may use CRLF on Windows; binary fonts stay exact.
+                actual_content = body if mime == "font/ttf" else body.replace(b"\r\n", b"\n")
+                expected_content = expected_body if mime == "font/ttf" else expected_body.replace(b"\r\n", b"\n")
                 checks = {
                     "status": response.status == status,
                     "MIME": mime in response.headers.get("Content-Type", ""),
-                    "content": hashlib.sha256(body).digest() == hashlib.sha256((docs / local).read_bytes()).digest(),
+                    "content": hashlib.sha256(actual_content).digest() == hashlib.sha256(expected_content).digest(),
                     "nosniff": response.headers.get("X-Content-Type-Options") == "nosniff",
                     "frame protection": response.headers.get("X-Frame-Options") == "DENY",
                     "CSP": bool(response.headers.get("Content-Security-Policy-Report-Only") or response.headers.get("Content-Security-Policy")),
@@ -73,7 +78,7 @@ def main():
             print(f"FAIL {path}: {error}", flush=True)
     if failures:
         raise SystemExit("Deployment verification failed:\n" + "\n".join(failures))
-    print(f"Verified {len(paths)} deployed routes and exact file contents.")
+    print(f"Verified {len(paths)} deployed routes and file contents (text line endings normalized).")
 
 
 if __name__ == "__main__":
