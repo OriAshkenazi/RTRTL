@@ -1,6 +1,7 @@
 """Check deployed static content, security headers, and routing with verified TLS."""
 
 import argparse
+import difflib
 import hashlib
 from pathlib import Path
 import urllib.error
@@ -59,6 +60,11 @@ def main():
                 failed = [key for key, passed in checks.items() if not passed]
                 if failed:
                     failures.append(f"{path}: {', '.join(failed)}")
+                    if "content" in failed and mime == "text/html":
+                        expected_lines = (docs / local).read_text(encoding="utf-8").splitlines()
+                        actual_lines = body.decode("utf-8", errors="replace").splitlines()
+                        difference = "\n".join(difflib.unified_diff(expected_lines, actual_lines, n=0))
+                        print(f"HTML difference: {difference[:1800]}", flush=True)
                     if response.status != status:
                         print(f"Unexpected response: server={response.headers.get('Server')}, ray={response.headers.get('CF-Ray')}, body={body[:200]!r}", flush=True)
                 print(f"{response.status} {path}: {'FAIL ' + ', '.join(failed) if failed else 'PASS'}", flush=True)
