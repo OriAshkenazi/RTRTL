@@ -175,3 +175,9 @@ html[dir=rtl] .hero-actions .button,html[dir=rtl] .hero-actions .micro{direction
 @media(min-width:701px){
   html[lang=en] .hero-layout{grid-template-columns:minmax(0,1.2fr) minmax(0,.9fr);grid-template-areas:"copy visual"}
 }
+
+/* English hero chrome follows LTR; the demo document keeps native RTL text. */
+html[lang=en] .hero{direction:ltr;text-align:left}
+html[lang=en] .hero-copy{direction:ltr;text-align:left}
+html[lang=en] .hero .hero-actions{align-items:flex-start}
+html[lang=en] .rtl-motion-foot{direction:ltr}
