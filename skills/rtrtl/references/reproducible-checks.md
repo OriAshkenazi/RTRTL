@@ -29,6 +29,14 @@ Web:
 
 This uses an isolated local profile and prints a compact summary, saving desktop/phone screenshots, PDF and font/geometry evidence. Inspect screenshots and the exported page; glyph checks alone cannot establish overall appearance. Its PDF qualifies the export path; do not print extra PDFs for every HTML edit.
 
+For navigation-arrow behavior only, reuse an HTML fixture and run the targeted mode:
+
+```powershell
+& $rtlNode "$rtlSkill/scripts/check_browser.cjs" --input $rtlEvidence --modules $rtlModules --channel chrome --checks arrows
+```
+
+This checks previous/next physical positions, accessible names, visible Unicode glyphs, transform/scale/rotate/translate and writing-mode properties through the document root, enabled click actions, keyboard actions, and disabled endpoint state plus boundary-key behavior at desktop and phone widths. It does not simulate pointer clicks on disabled buttons. It writes `arrows-results.json` and arrow screenshots only; it skips corpus, font inspection, and PDF checks. The report records the actual fixture hash separately from the manifest hash, so intentional scratch controls remain identifiable. Inspect both screenshots for actual glyph pixels. For a negative control, copy the fixture directory to a scratch directory, swap the two arrow glyphs in its `fixture.html` without changing `build_fixtures.py`, and rerun this mode there; it should fail the glyph assertions. Do not alter the source fixture.
+
 Office (choose only the relevant `docx`, `pptx` or `xlsx`):
 
 ```powershell

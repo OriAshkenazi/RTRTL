@@ -12,11 +12,11 @@ function setMode(rtl) {
   alignButton.setAttribute('aria-pressed', String(!rtl));
   note.textContent = hebrew
     ? (rtl
-      ? 'כיוון הבסיס מוגדר מימין לשמאל. ערכים באנגלית מבודדים בשלמותם. טקסט המקור נשמר בסדר לוגי.'
-      : 'אותו טקסט לוגי, מיושר לימין אך עם כיוון בסיס משמאל לימין וללא בידוד. שימו לב לכותרת ולפיסוק.')
+      ? 'העברית נקראת מימין לשמאל והקודים והערכים שומרים על הסדר הפנימי שלהם. טקסט המקור אינו משתנה.'
+      : 'הפסקה מיושרת לימין, אך כיוונה מוגדר משמאל לימין. השוו את הכותרת ואת סימני הפיסוק.')
     : (rtl
-      ? 'Explicit RTL base. Complete LTR values isolated. Source text stays in logical order.'
-      : 'Same logical text, right-aligned with an LTR base and no isolation. Notice the heading and punctuation.');
+      ? 'Hebrew reads right to left. Codes and values keep their internal order. The original text is unchanged.'
+      : 'The paragraph is aligned right, but its direction is left to right. Compare the heading and punctuation.');
   code.textContent = rtl
     ? '<p lang="he" dir="rtl">\n  הפרש המדידה: <bdi dir="ltr">-12.50 mm</bdi>.\n</p>'
     : '<p lang="he" dir="ltr" style="text-align:right">\n  הפרש המדידה: -12.50 mm.\n</p>';
@@ -36,6 +36,6 @@ document.querySelector('#copy-prompt').addEventListener('click', async () => {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    status.textContent = hebrew ? 'סמנו והעתיקו את ההנחיה המודגשת.' : 'Select and copy the highlighted prompt.';
+    status.textContent = hebrew ? 'העתיקו ידנית את ההנחיה המסומנת.' : 'Copy the selected prompt manually.';
   }
 });

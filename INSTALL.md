@@ -1,32 +1,29 @@
 # Install RTRTL
 
-RTRTL is a Codex skill stored at `skills/rtrtl`. It uses only files in the skill
-directory and can be installed by copying that directory into a Codex skills
-directory. The bundled installer uses only Python's standard library. It does
-not download files, install packages, or run Office applications.
+RTRTL is a file-based skill stored at `skills/rtrtl`. Ask your AI agent to install
+it, or copy the folder into the skills directory configured for your environment.
+The instructions below cover local Codex installation. Other agents that support
+skills may use a different directory.
 
-## Ask the skill installer
+The bundled Python installer works offline and needs no extra packages. It copies
+the skill files without installing rendering tools or launching Office.
 
-If the `skill-installer` tool is available in your Codex environment, give it
-this prompt:
+## Install with your AI agent
 
-> Install the RTRTL skill from
-> https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl using
-> skill-installer. Preserve any existing local edits and do not overwrite an
-> existing installation. Verify that the installed `rtrtl/SKILL.md` exists and
-> report its path. Load the skill on the next turn; if it is not available,
-> restart or reload Codex and check again.
+If your Codex environment includes `skill-installer`, paste this prompt into
+your AI agent's chat:
 
-The installer tool and skill loading behavior can vary by host. If this route is
-unavailable, use the repository copier below and consult the host's configured
-skills directory. This guide does not claim automatic discovery for every Codex
-host or deployment.
+> Use $skill-installer to install the RTRTL skill from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Do not overwrite an existing installation or local edits. Check that SKILL.md and the bundled supporting files are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.
+
+If the skill does not appear, start a new chat or restart Codex. If your AI agent
+does not offer this installer, use the manual method below with the skills
+directory specified by its documentation.
 
 ## Clone and copy locally
 
 Clone the repository, then run its installer. With `CODEX_HOME` set, the
 default destination is `$CODEX_HOME/skills/rtrtl` (or
-`%CODEX_HOME%\skills\rtrtl` in PowerShell). Otherwise it is
+`$env:CODEX_HOME\skills\rtrtl` in PowerShell). Otherwise it is
 `~/.codex/skills/rtrtl`.
 
 ```powershell
@@ -35,14 +32,14 @@ cd RTRTL
 python scripts/install.py
 ```
 
-To preview the validated file count and destination without copying:
+To check the files and preview the destination without copying:
 
 ```powershell
 python scripts/install.py --dry-run
 ```
 
-If the intended Codex host uses another skills directory, pass its parent
-directory explicitly. The skill is placed in a child directory named `rtrtl`:
+To use another skills directory, pass its path with `--dest`. The installer
+creates an `rtrtl` folder inside it:
 
 ```powershell
 python scripts/install.py --dest "C:\path\to\configured\skills"
@@ -50,12 +47,12 @@ python scripts/install.py --dest "C:\path\to\configured\skills"
 
 The installer refuses to replace an existing `rtrtl` directory, rejects
 symbolic links and unsafe source paths, and stages the copy before placing it.
-Review or back up a destination that already exists before handling it yourself;
-the installer has no overwrite option.
+If a copy already exists, review and back up any local edits before replacing it
+yourself. The installer has no overwrite option.
 
-After copying, verify that `<skills parent>/rtrtl/SKILL.md` exists. Load the
-skill on the next turn. If the host does not expose it, restart or reload Codex
-and check again.
+After copying, check that `<skills directory>/rtrtl/SKILL.md` and its supporting
+files are present. Start a new chat to use the skill. If Codex still does not
+show it, restart the app.
 
 ## Verify the bundled installer
 

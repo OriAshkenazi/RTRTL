@@ -1,10 +1,10 @@
 # RTRTL — Right to RTL
 
-**Give Hebrew the right direction, from the first draft.**
+**Give RTL text the right direction, from the first draft.**
 
 **הזכות לכתוב בכיוון הנכון.**
 
-An open-source AI skill for readable Hebrew and mixed Hebrew/English content. A compact core teaches direction, alignment, logical Unicode order and safe LTR scopes. Format-specific adapters cover web, Office, PDF and more, loaded only when needed.
+An open-source skill that helps your AI agent handle right-to-left and mixed-direction text. It starts with short core instructions and adds guidance for the format you are using. Current tested guidance focuses on Hebrew.
 
 **[Explore the website](https://oriashkenazi.github.io/RTRTL/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
 
@@ -13,16 +13,17 @@ An open-source AI skill for readable Hebrew and mixed Hebrew/English content. A 
 Paste into Codex:
 
 ```text
-Use $skill-installer to install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Preserve any existing local skill edits. Verify that SKILL.md and its relative references are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.
+Use $skill-installer to install the RTRTL skill from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Do not overwrite an existing installation or local edits. Check that SKILL.md and the bundled supporting files are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.
 ```
 
-If it does not appear, start a new turn or restart Codex. For another skill-capable agent, use its configured skill directory; there is no universal installation location. See [manual installation](INSTALL.md) for an offline, standard-library Python copier that refuses to overwrite existing files. Installing the skill does not install renderer dependencies or launch Office.
+If it does not appear, start a new chat or restart Codex. For another skill-capable agent, use its configured skill directory; there is no universal installation location. See [manual installation](INSTALL.md) for an offline, standard-library Python copier that refuses to overwrite existing files. Installing the skill does not install renderer dependencies or launch Office.
 
 ## What it changes
 
 - Write logical Unicode text and preserve exact identifiers, punctuation and typed data.
 - Set paragraph direction explicitly; keep direction, alignment and fonts separate.
 - Isolate whole LTR phrases and values using native format controls where supported.
+- Verify directional arrows against their meaning, rendered appearance and interaction behavior.
 - Verify the actual consumer and requested exports, with source, appearance and search/copy treated separately.
 
 For an ordinary Hebrew reply, apply the core directly. No browsing, test corpus or application launch is needed. For artifacts, read one relevant adapter, implement direction before rendering and check the affected output. Extra formats and full-corpus reruns are reserved for real conversion or qualification work.
@@ -33,7 +34,7 @@ For an ordinary Hebrew reply, apply the core directly. No browsing, test corpus 
 Use $rtrtl to write this Hebrew report as editable Word content, preserving English codes and signed quantities. Verify the requested Word/PDF output.
 ```
 
-The [skill](skills/rtrtl/SKILL.md) stays framework-independent. Adapters explain HTML/React, Word, PowerPoint, Excel, PDF, native UI, graphics, LaTeX and text/subtitles. Some are tested recipes; others are guidance pending target-specific qualification. [Read the scope](COMPATIBILITY.md) before making compatibility claims.
+The [skill](skills/rtrtl/SKILL.md) stays framework-independent. Adapters explain HTML/React, Word, PowerPoint, Excel, PDF, native UI, graphics, LaTeX and text/subtitles. Some guides include tested examples; others still need checks in the target application. [Read the scope](COMPATIBILITY.md) before making compatibility claims.
 
 ## Verify and develop
 
@@ -41,6 +42,7 @@ The [skill](skills/rtrtl/SKILL.md) stays framework-independent. Adapters explain
 python -m unittest discover -s tests -v
 python scripts/validate.py
 node --check docs/assets/app.js
+node --check skills/rtrtl/scripts/check_browser.cjs
 node tests/test_locale.cjs
 ```
 
@@ -52,4 +54,4 @@ The website has full English and Hebrew editions. Its initial language uses the 
 
 Bring your stack, renderer fix, font guidance, clearer documentation or small reproducible test case. Compatibility tests for your target RTL language are especially welcome: record its language and writing system, fonts, environment, results and limits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](https://github.com/OriAshkenazi/RTRTL/issues/new/choose). Report enough evidence for the next person to reproduce your result. Current tested guidance focuses on Hebrew; results do not automatically transfer to other languages.
 
-Skill and website code: [MIT](LICENSE). Website fonts: SIL OFL 1.1; [credits](docs/credits.html). No private conversation history is included.
+Skill and website code: [MIT](LICENSE). Website fonts: SIL OFL 1.1; [credits](docs/credits.html).
