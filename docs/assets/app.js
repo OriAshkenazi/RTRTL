@@ -23,6 +23,25 @@ function setMode(rtl) {
 }
 rtlButton.addEventListener('click', () => setMode(true));
 alignButton.addEventListener('click', () => setMode(false));
+const agentSelect = document.querySelector('#agent-select');
+const installPrompt = document.querySelector('#install-prompt');
+const genericInstallPrompt = installPrompt.textContent.trim();
+const source = 'https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl';
+const installChecks = 'Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it.';
+const installPrompts = {
+  codex: `Install RTRTL from ${source} for Codex. Use skill-installer if available; otherwise use the configured Codex skills directory. ${installChecks} Then use $rtrtl for Hebrew and mixed Hebrew/English content.`,
+  claude: `Install RTRTL from ${source} for Claude Code in ~/.claude/skills/rtrtl for personal use. ${installChecks} Then use /rtrtl for Hebrew and mixed Hebrew/English content.`,
+  antigravity: `Install RTRTL from ${source} for Antigravity in this workspace's .agents/skills/rtrtl directory. ${installChecks} Then use RTRTL for Hebrew and mixed Hebrew/English content.`,
+  other: genericInstallPrompt
+};
+function updateInstallPrompt() {
+  installPrompt.textContent = Object.hasOwn(installPrompts, agentSelect.value)
+    ? installPrompts[agentSelect.value] : genericInstallPrompt;
+  document.querySelector('#copy-status').textContent = '';
+}
+agentSelect.addEventListener('change', updateInstallPrompt);
+// Account for browser-restored select values after a reload.
+updateInstallPrompt();
 document.querySelector('#copy-prompt').addEventListener('click', async () => {
   const prompt = document.querySelector('#install-prompt');
   const status = document.querySelector('#copy-status');

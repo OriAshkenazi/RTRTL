@@ -4,19 +4,19 @@
 
 **הזכות לכתוב בכיוון הנכון.**
 
-An open-source skill that helps your AI agent handle right-to-left and mixed-direction text. It starts with short core instructions and adds guidance for the format you are using. Current tested guidance focuses on Hebrew.
+An open-source skill for **Codex, Claude Code, Antigravity and any other coding agent that supports skills**. It helps your AI agent handle right-to-left and mixed-direction text. It starts with short core instructions and adds guidance for the format you are using. Current tested guidance focuses on Hebrew.
 
 **[Explore the website](https://oriashkenazi.github.io/RTRTL/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
 
 ## Install with your AI agent
 
-Paste into Codex:
+Choose your coding agent in the [website’s installation section](https://oriashkenazi.github.io/RTRTL/?lang=en#install) for a tailored prompt, or paste this generic prompt:
 
 ```text
-Use $skill-installer to install the RTRTL skill from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl. Do not overwrite an existing installation or local edits. Check that SKILL.md and the bundled supporting files are installed. Then use $rtrtl for Hebrew and mixed Hebrew/English content.
+Install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl into the skills directory supported by this coding agent. Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it. Then use RTRTL for Hebrew and mixed Hebrew/English content.
 ```
 
-If it does not appear, start a new chat or restart Codex. For another skill-capable agent, use its configured skill directory; there is no universal installation location. See [manual installation](INSTALL.md) for an offline, standard-library Python copier that refuses to overwrite existing files. Installing the skill does not install renderer dependencies or launch Office.
+Use the skills directory and loading instructions for your coding agent. The [installation guide](INSTALL.md) covers Codex, Claude Code, Antigravity and other agents that support skills. See [manual installation](INSTALL.md) for an offline, standard-library Python copier that refuses to overwrite existing files. Installing the skill does not install renderer dependencies or launch Office.
 
 ## What it changes
 
@@ -44,6 +44,7 @@ python scripts/validate.py
 node --check docs/assets/app.js
 node --check skills/rtrtl/scripts/check_browser.cjs
 node tests/test_locale.cjs
+node tests/test_install_prompt.cjs
 ```
 
 Optional renderer checks and dependencies are documented in [reproducible checks](skills/rtrtl/references/reproducible-checks.md). Generate only the selected format. The website is static HTML/CSS/JS in `docs/`; preview it with `python -m http.server 8765 --directory docs`. GitHub Pages publishes `main:/docs`.

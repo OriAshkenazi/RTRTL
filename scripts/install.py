@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Install the bundled RTRTL Codex skill without network access."""
+"""Install the bundled RTRTL skill without network access."""
 
 from __future__ import annotations
 
@@ -93,7 +93,7 @@ def default_skills_parent() -> Path:
 
 
 def main(argv: list[str] | None = None) -> int:
-    parser = argparse.ArgumentParser(description="Install the bundled RTRTL Codex skill offline.")
+    parser = argparse.ArgumentParser(description="Install the bundled RTRTL skill offline (default destination: Codex).")
     parser.add_argument("--dest", type=Path, help="parent skills directory; installs into <dest>/rtrtl")
     parser.add_argument("--dry-run", action="store_true", help="validate and show the planned destination without copying")
     args = parser.parse_args(argv)

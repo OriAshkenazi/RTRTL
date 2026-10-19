@@ -23,3 +23,4 @@ jobs:
       - run: node --check docs/assets/app.js
       - run: node --check skills/rtrtl/scripts/check_browser.cjs
       - run: node tests/test_locale.cjs
+      - run: node tests/test_install_prompt.cjs
