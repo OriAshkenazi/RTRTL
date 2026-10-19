@@ -95,3 +95,5 @@ bdi{unicode-bidi:isolate}
 
 /* Arabic samples retain their own font within the English edition. */
 html[lang=en] .arabic,html[lang=en] .direction-strip [lang=ar]{font-family:Arabic,Geist,sans-serif;letter-spacing:0}
+
+.contribute-bottom .button{align-self:flex-start;gap:18px;max-inline-size:100%}
