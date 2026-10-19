@@ -59,13 +59,12 @@ bdi{unicode-bidi:isolate}
 .agent-trigger:hover{color:#d9f681}
 .agent-trigger svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.6;transition:transform .18s ease}
 .agent-trigger[aria-expanded=true] svg{transform:rotate(180deg)}
-.agent-menu{position:absolute;inset-block-start:calc(100% + 10px);inset-inline-start:0;z-index:30;inline-size:min(244px,calc(100vw - 92px));padding:6px;background:linear-gradient(145deg,#373e30,#262d22);border:1px solid #77836666;border-radius:13px;box-shadow:0 16px 40px #11170e55,0 3px 8px #11170e33}
+.agent-menu{position:absolute;direction:ltr;inset-block-start:100%;inset-inline-start:-8px;z-index:30;inline-size:max-content;min-inline-size:100%;max-inline-size:calc(100vw - 48px);padding:5px 8px;background:#262d22;opacity:1;border:1px solid #535e49;border-radius:5px;box-shadow:none}
 .agent-menu[hidden]{display:none}
-.agent-menu [role=option]{display:flex;align-items:center;justify-content:space-between;gap:14px;inline-size:100%;min-block-size:44px;padding:11px 12px;border:0;border-radius:8px;background:none;color:#e5ebdd;font-size:14px;text-align:start}
-.agent-menu [role=option]:hover,.agent-menu [role=option]:focus-visible{background:#d6e6bf12;color:#fff;outline:none}
-.agent-menu [role=option][aria-selected=true]{background:#d6e6bf16;color:#dbefb9}
-.agent-menu [role=option] svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;visibility:hidden;flex-shrink:0}
-.agent-menu [role=option][aria-selected=true] svg{visibility:visible}
+.agent-menu [role=option]{display:block;inline-size:100%;min-block-size:0;padding:3px 0;border:0;border-radius:0;background:none;color:#f1f5e9;font-size:14px;font-weight:550;line-height:1.55;letter-spacing:-.015em;text-align:start;white-space:nowrap}
+.agent-menu [role=option]:hover,.agent-menu [role=option]:focus-visible{background:none;color:#d9f681;text-decoration:underline;text-underline-offset:3px;outline:none}
+.agent-menu [role=option][aria-selected=true]{background:none;color:#dbefb9}
+.agent-menu [role=option] svg{display:none}
 .agent-trigger:focus-visible{outline:2px solid #c6b4f5;outline-offset:5px}
 
 .prompt-top:has(.agent-picker--compact){gap:12px}
