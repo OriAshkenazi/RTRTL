@@ -32,3 +32,7 @@ bdi{unicode-bidi:isolate}
   html[lang=he] .stack-desc{font-size:9px}
   html[lang=he] .contribute-heading h2{font-size:40px}
 }
+@media(max-width:380px){
+  .header{gap:10px}
+  .header nav a:nth-child(2){display:none}
+}
