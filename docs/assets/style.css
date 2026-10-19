@@ -165,3 +165,9 @@ html[dir=rtl] .hero-actions .button,html[dir=rtl] .hero-actions .micro{direction
   .direction-statement h2[lang=en]{font-size:clamp(40px,13vw,90px)}
   .statement-links{justify-self:end;padding:0}
 }
+
+/* Desktop hero fills most of the screen while retaining room for its content. */
+@media(min-width:1001px){
+  .hero{display:grid;grid-template-rows:auto 1fr auto;min-block-size:88svh;padding-block-start:clamp(24px,4svh,48px)}
+  .hero-layout{padding-block:clamp(24px,4svh,48px)}
+}
