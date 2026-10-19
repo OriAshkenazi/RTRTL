@@ -1,0 +1,16 @@
+/* Compact language-name list, matching the agent picker in the header palette. */
+.language-picker{position:relative;font-size:13px;font-weight:550;letter-spacing:-.015em}
+.language-picker summary{display:inline-flex;align-items:center;gap:8px;min-block-size:36px;cursor:pointer;list-style:none;border-radius:5px}
+.language-picker summary::-webkit-details-marker{display:none}
+.language-picker summary:hover{color:#68519f}
+.language-picker svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+.language-picker summary svg{opacity:.6;transition:transform .18s ease}
+.language-picker[open] summary svg{transform:rotate(180deg)}
+.header .language-menu{position:absolute;inset-block-start:100%;inset-inline-end:-8px;z-index:40;display:flex;flex-direction:column;gap:0;inline-size:max-content;min-inline-size:100%;padding:5px 8px;border:1px solid var(--line);border-radius:5px;background:#f4f3ed;opacity:1;box-shadow:none;font:inherit}
+.language-picker:not([open]) .language-menu{display:none}
+.header .language-menu a{display:block;inline-size:100%;min-block-size:0;padding:3px 0;border-radius:0;background:none;font:inherit;text-align:start;white-space:nowrap}
+.header .language-menu a:first-child,.header .language-menu a:nth-child(2){display:block}
+.header .language-menu a:hover,.header .language-menu a:focus-visible{background:none;color:#68519f;text-decoration:underline;text-underline-offset:3px;outline:none}
+.header .language-menu a[aria-current=page]{background:none;color:#34452a}
+.header .language-menu a svg{display:none}
+@media(max-width:700px){.language-picker{font-size:12px}}
