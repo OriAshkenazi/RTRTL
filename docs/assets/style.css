@@ -50,3 +50,25 @@ bdi{unicode-bidi:isolate}
 .agent-picker select:focus-visible{outline:3px solid #c6b4f5;outline-offset:4px}
 
 .prompt-panel #install-prompt{max-inline-size:none}
+
+/* Agent name trigger and floating choices. Chevron direction stays down in both locales. */
+.prompt-panel:has(.agent-picker--compact){overflow:visible}
+.prompt-top:has(.agent-picker--compact){letter-spacing:normal}
+.agent-picker--compact{position:relative;display:block;padding:0;border:0}
+.agent-trigger{display:inline-flex;align-items:center;gap:9px;min-block-size:36px;padding:0;border:0;background:none;color:#f1f5e9;font-size:14px;font-weight:550;letter-spacing:-.015em;border-radius:5px}
+.agent-trigger:hover{color:#d9f681}
+.agent-trigger svg{fill:none;stroke:currentColor;stroke-width:1.5;stroke-linecap:round;stroke-linejoin:round;opacity:.6;transition:transform .18s ease}
+.agent-trigger[aria-expanded=true] svg{transform:rotate(180deg)}
+.agent-menu{position:absolute;inset-block-start:calc(100% + 10px);inset-inline-start:0;z-index:30;inline-size:min(244px,calc(100vw - 92px));padding:6px;background:linear-gradient(145deg,#373e30,#262d22);border:1px solid #77836666;border-radius:13px;box-shadow:0 16px 40px #11170e55,0 3px 8px #11170e33}
+.agent-menu[hidden]{display:none}
+.agent-menu [role=option]{display:flex;align-items:center;justify-content:space-between;gap:14px;inline-size:100%;min-block-size:44px;padding:11px 12px;border:0;border-radius:8px;background:none;color:#e5ebdd;font-size:14px;text-align:start}
+.agent-menu [role=option]:hover,.agent-menu [role=option]:focus-visible{background:#d6e6bf12;color:#fff;outline:none}
+.agent-menu [role=option][aria-selected=true]{background:#d6e6bf16;color:#dbefb9}
+.agent-menu [role=option] svg{fill:none;stroke:currentColor;stroke-width:1.6;stroke-linecap:round;stroke-linejoin:round;visibility:hidden;flex-shrink:0}
+.agent-menu [role=option][aria-selected=true] svg{visibility:visible}
+.agent-trigger:focus-visible{outline:2px solid #c6b4f5;outline-offset:5px}
+
+.prompt-top:has(.agent-picker--compact){gap:12px}
+.agent-trigger{white-space:nowrap}
+.prompt-top:has(.agent-picker--compact) .copy-button{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
+.prompt-top .copy-button svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}

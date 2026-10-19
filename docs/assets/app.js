@@ -42,6 +42,65 @@ function updateInstallPrompt() {
 agentSelect.addEventListener('change', updateInstallPrompt);
 // Account for browser-restored select values after a reload.
 updateInstallPrompt();
+// Keep the native value as the prompt state; expose a compact, keyboard-operable listbox.
+const agentPicker = document.querySelector('#agent-picker');
+if (agentPicker) {
+  const trigger = document.querySelector('#agent-trigger');
+  const menu = document.querySelector('#agent-options');
+  const name = document.querySelector('#agent-name');
+  const options = [...menu.querySelectorAll('[role="option"]')];
+  function syncPicker() {
+    const selected = options.find(option => option.dataset.agent === agentSelect.value) || options[0];
+    name.textContent = selected.dataset.agent === 'other'
+      ? (hebrew ? 'סוכן אחר' : 'Other agent') : selected.querySelector('span').textContent;
+    for (const option of options) option.setAttribute('aria-selected', String(option === selected));
+  }
+  function closePicker(returnFocus = false) {
+    menu.hidden = true;
+    trigger.setAttribute('aria-expanded', 'false');
+    if (returnFocus) trigger.focus();
+  }
+  function openPicker() {
+    menu.hidden = false;
+    trigger.setAttribute('aria-expanded', 'true');
+    (options.find(option => option.dataset.agent === agentSelect.value) || options[0]).focus();
+  }
+  trigger.addEventListener('click', () => menu.hidden ? openPicker() : closePicker());
+  for (const option of options) option.addEventListener('click', () => {
+    agentSelect.value = option.dataset.agent;
+    updateInstallPrompt();
+    syncPicker();
+    closePicker(true);
+  });
+  agentSelect.addEventListener('change', syncPicker);
+  agentPicker.addEventListener('keydown', event => {
+    if (event.key === 'Escape') { event.preventDefault(); closePicker(true); return; }
+    if (event.key === 'Tab') { closePicker(); return; }
+    if (event.target === trigger && ['ArrowDown', 'ArrowUp'].includes(event.key)) {
+      event.preventDefault(); openPicker(); return;
+    }
+    if (menu.hidden) return;
+    const index = options.indexOf(document.activeElement);
+    let target = null;
+    if (event.key === 'ArrowDown') target = (index + 1) % options.length;
+    if (event.key === 'ArrowUp') target = (index - 1 + options.length) % options.length;
+    if (event.key === 'Home') target = 0;
+    if (event.key === 'End') target = options.length - 1;
+    if (target !== null) { event.preventDefault(); options[target].focus(); }
+    else if (event.key.length === 1 && /\S/.test(event.key)) {
+      const ordered = [...options.slice(index + 1), ...options.slice(0, index + 1)];
+      const match = ordered.find(option => option.textContent.trim().toLocaleLowerCase().startsWith(event.key.toLocaleLowerCase()));
+      if (match) { event.preventDefault(); match.focus(); }
+    }
+  });
+  agentPicker.addEventListener('focusout', event => {
+    if (!agentPicker.contains(event.relatedTarget)) closePicker();
+  });
+  document.addEventListener('click', event => {
+    if (!agentPicker.contains(event.target)) closePicker();
+  });
+  syncPicker();
+}
 document.querySelector('#copy-prompt').addEventListener('click', async () => {
   const prompt = document.querySelector('#install-prompt');
   const status = document.querySelector('#copy-status');
