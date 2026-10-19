@@ -114,7 +114,8 @@ html[dir=rtl] .rtl-motion{direction:rtl}
 .rtl-motion-bar,.rtl-motion-foot{position:relative;z-index:1;display:flex;justify-content:space-between;align-items:center;gap:12px;padding:12px 20px;font-size:11px;color:var(--muted)}
 .rtl-motion-bar{border-block-end:1px solid var(--line);min-block-size:50px}
 .rtl-motion-foot{border-block-start:1px solid var(--line);min-block-size:54px}
-.rtl-state{min-inline-size:0;line-height:1.4;transition:color .3s}
+.rtl-state{display:grid;min-inline-size:0;line-height:1.4;transition:color .3s}
+.rtl-state>span{grid-area:1/1;visibility:hidden}.rtl-state>span.is-on{visibility:visible}
 html[lang=en] .rtl-state{font-size:10px;letter-spacing:.07em;text-transform:uppercase}
 .rtl-state.is-ok{color:#4f6634}
 .rtl-langs{display:flex;flex-shrink:0;gap:2px;padding:3px;border-radius:6px;background:#dfe1d6}
@@ -141,9 +142,11 @@ html[lang=en] .rtl-state{font-size:10px;letter-spacing:.07em;text-transform:uppe
 .rtl-count{min-inline-size:0;font-variant-numeric:tabular-nums;line-height:1.4}
 .rtl-count b{display:inline-block;min-inline-size:1.2ch;text-align:center;font-weight:650;color:#b8436b;transition:color .3s}
 .rtl-count.is-zero b{color:#4f6634}
+.rtl-count-tail{visibility:hidden}.rtl-count.is-done .rtl-count-tail{visibility:visible}
 .rtl-motion-controls{display:flex;gap:15px;align-items:center;flex-shrink:0}
 .rtl-replay,.rtl-pause{border:0;border-block-end:1px solid currentColor;background:none;padding:3px 0;font-size:11px;color:var(--ink)}
-.rtl-pause[hidden]{display:none}
+/* Hidden but still laid out, so the footer never reflows when the control appears. */
+.rtl-pause[hidden]{display:inline-block;visibility:hidden}
 @media(max-width:1000px){.hero-layout{gap:32px}.hero h1,html[lang=he] .hero h1{font-size:clamp(40px,5.2vw,60px)}.rtl-motion-page{padding-inline:22px;font-size:16px}}
 @media(max-width:700px){
   .hero-layout{grid-template-columns:minmax(0,1fr);grid-template-areas:"copy" "visual";gap:28px;padding-block:26px 35px}
@@ -205,5 +208,5 @@ html[lang=en] .rtl-motion-bar,html[lang=en] .rtl-motion-foot{direction:ltr}
   .demo-preview-label{margin-block-end:clamp(88px,12svh,132px)}
 }
 
-/* Balance the English headline so its last word never sits alone. */
-html[lang=en] .hero h1{text-wrap:balance}
+/* Keep the English headline's last words together so "draft." never sits alone. */
+.hero h1 .keep{white-space:nowrap}

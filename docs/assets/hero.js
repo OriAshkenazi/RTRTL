@@ -19,6 +19,15 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
   const glowId = `rtl-glow-${++demoCount}`;
   const docs = {[page.lang]: page.innerHTML};
   for (const template of demo.querySelectorAll('template[data-lang]')) docs[template.dataset.lang] = template.innerHTML;
+  // Every label variant shares one grid cell, so the card keeps the size of the longest one.
+  const labels = Object.fromEntries(['broken', 'fixing', 'fixed'].map(key => {
+    const label = document.createElement('span');
+    label.textContent = state.dataset[key];
+    return [key, label];
+  }));
+  state.replaceChildren(...Object.values(labels));
+  labels.fixed.classList.add('is-on');
+  tail.textContent = tail.dataset.tail;
   const sweep = document.createElement('span');
   sweep.className = 'rtl-sweep';
   paper.append(sweep);
@@ -139,7 +148,7 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     ring.animate([{r: 3, opacity: 1}, {r: 18, opacity: 0}], {duration: 520, easing: 'ease-out'}).finished.then(() => ring.remove(), () => ring.remove());
   }
   function setState(key, ok) {
-    state.textContent = state.dataset[key];
+    for (const [name, label] of Object.entries(labels)) label.classList.toggle('is-on', name === key);
     state.classList.toggle('is-ok', ok);
   }
 
@@ -233,7 +242,7 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     for (const path of segments.flat()) path.style.opacity = '';
     svg.classList.add('is-resting');
     page.classList.add('is-lit');
-    tail.textContent = tail.dataset.tail;
+    count.classList.add('is-done');
     setState('fixed', true);
     demo.dataset.phase = 'done';
   }
@@ -246,7 +255,7 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     setDirection(true);
     buildPath();
     setTally(0, false);
-    tail.textContent = '';
+    count.classList.remove('is-done');
     setState('broken', false);
     pause.hidden = false;
     demo.dataset.phase = 'stumble';
