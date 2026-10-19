@@ -5,5 +5,21 @@
   Permissions-Policy: camera=(), microphone=(), geolocation=()
   Content-Security-Policy-Report-Only: default-src 'self'; base-uri 'self'; object-src 'none'; frame-ancestors 'none'; form-action 'self'; img-src 'self' data:; font-src 'self' data:; script-src 'self' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; connect-src 'self' https://cloudflareinsights.com; upgrade-insecure-requests
 
+# Advertise the Agent Skills index and Markdown edition (RFC 8288 Link header) on the homepages.
+/
+  Link: </.well-known/agent-skills/index.json>; rel="describedby"; type="application/json", </index.md>; rel="alternate"; type="text/markdown"
+/he/
+  Link: </.well-known/agent-skills/index.json>; rel="describedby"; type="application/json", </he/index.md>; rel="alternate"; type="text/markdown"
+/ar/
+  Link: </.well-known/agent-skills/index.json>; rel="describedby"; type="application/json", </ar/index.md>; rel="alternate"; type="text/markdown"
+
+/.well-known/agent-skills/*
+  Access-Control-Allow-Origin: *
+  Cache-Control: public, max-age=3600
+/.well-known/agent-skills/index.json
+  Content-Type: application/json
+/.well-known/agent-skills/*.tar.gz
+  Content-Type: application/gzip
+
 https://:version.:subdomain.workers.dev/*
   X-Robots-Tag: noindex

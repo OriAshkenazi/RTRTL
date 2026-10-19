@@ -1,10 +1,14 @@
 {
   "$schema": "./node_modules/wrangler/config-schema.json",
   "name": "rtrtl-site",
+  "main": "./src/worker.mjs",
   "compatibility_date": "2026-10-19",
   "workers_dev": true,
   "assets": {
     "directory": "./docs",
+    "binding": "ASSETS",
+    // Only the homepages negotiate Markdown; every other path stays a free static-asset request.
+    "run_worker_first": ["/", "/index.html", "/he", "/he/", "/he/index.html", "/ar", "/ar/", "/ar/index.html"],
     "html_handling": "none",
     "not_found_handling": "404-page"
   },

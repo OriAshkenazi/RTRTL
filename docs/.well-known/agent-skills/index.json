@@ -1,0 +1,12 @@
+{
+  "$schema": "https://schemas.agentskills.io/discovery/0.2.0/schema.json",
+  "skills": [
+    {
+      "name": "rtrtl",
+      "type": "archive",
+      "description": "Author readable Hebrew and mixed Hebrew/English text with correct RTL from the start. Use for Hebrew authoring or RTL repairs in the requested format.",
+      "url": "/.well-known/agent-skills/rtrtl.tar.gz",
+      "digest": "sha256:9256bf769778be07de389331235b7e36e1fc030151985f6447fd93768e58abc2"
+    }
+  ]
+}

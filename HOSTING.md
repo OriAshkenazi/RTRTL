@@ -30,3 +30,11 @@ Until production verification is complete, preserve the prior GitHub Pages custo
 ## Operational controls
 
 Workers Static Assets supplies MIME types and default browser revalidation (`Cache-Control: public, max-age=0, must-revalidate` with ETags). Keep HTML and changing JS/CSS on revalidation. Add immutable browser caching only when filenames contain a content fingerprint. Cloudflare account-level settings and dashboard-created resources must be recorded in private operational evidence, not committed as credentials.
+
+## Agent discovery
+
+`docs/.well-known/agent-skills/` publishes the skill under the Agent Skills Discovery v0.2.0 format: `index.json` plus a reproducible `rtrtl.tar.gz` of `skills/rtrtl/`. After any skill change, run `python scripts/build_agent_skills.py` and commit both files; `scripts/validate.py` fails while they are stale. The homepages advertise the index in a `Link` header, and `robots.txt` declares Content Signals.
+
+`src/worker.mjs` adds Markdown content negotiation without the paid zone-level Markdown for Agents setting. It runs only for the homepage paths in `run_worker_first`; a request for one of them with `Accept: text/markdown` (or `text/*`) preferred over HTML receives `docs/index.md`, `docs/he/index.md` or `docs/ar/index.md`, generated from the HTML by `python scripts/build_markdown.py`. Responses on those paths carry `Vary: Accept`. On the Workers Free plan these homepage requests count toward the 100,000 daily Worker requests; all other paths stay free static-asset requests. Verify the over-limit behavior for the custom domain before relying on it.
+
+Radar agent-readiness checks for API catalogs, OAuth/OIDC, MCP or A2A cards, WebMCP, DNS-AID and ARD do not apply: the site has no API, authentication or agent endpoint. Radar's CORS violation for `beacon.min.js` comes from the scanner's own `signature-agent` request header, not from site code.

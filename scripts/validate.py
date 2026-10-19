@@ -64,6 +64,10 @@ def validate():
                         resolved = path.parent / target_value
                     if not resolved.exists():
                         errors.append(f'Broken page asset/link in {path.relative_to(ROOT)}: {target}')
+    for builder in ('build_agent_skills.py', 'build_markdown.py'):
+        result = subprocess.run([sys.executable, str(ROOT / 'scripts' / builder), '--check'], capture_output=True, text=True, encoding='utf-8')
+        if result.returncode:
+            errors.append(result.stderr.strip())
     with tempfile.TemporaryDirectory(prefix='rtrtl-fixture-') as output:
         result = subprocess.run([sys.executable, '-S', str(skill / 'scripts' / 'build_fixtures.py'), '--out', output, '--formats', 'html'], capture_output=True, text=True, encoding='utf-8')
         if result.returncode:
