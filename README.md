@@ -6,11 +6,11 @@
 
 An open-source skill for **Codex, Claude Code, Antigravity and any other coding agent that supports skills**. It helps your AI agent handle right-to-left and mixed-direction text. It starts with short core instructions and adds guidance for the format you are using. Current tested guidance focuses on Hebrew.
 
-**[Explore the website](https://oriashkenazi.github.io/RTRTL/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
+**[Explore the website](https://rtrtl.org/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
 
 ## Install with your AI agent
 
-Choose your coding agent in the [website’s installation section](https://oriashkenazi.github.io/RTRTL/?lang=en#install) for a tailored prompt, or paste this generic prompt:
+Choose your coding agent in the [website’s installation section](https://rtrtl.org/?lang=en#install) for a tailored prompt, or paste this generic prompt:
 
 ```text
 Install RTRTL from https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl into the skills directory supported by this coding agent. Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it. Then use RTRTL for Hebrew and mixed Hebrew/English content.
