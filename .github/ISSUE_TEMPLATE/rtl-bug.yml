@@ -6,19 +6,26 @@ body:
   - type: markdown
     attributes:
       value: >-
-        Use a small synthetic case. Do not include private documents, project details, or private issue history.
+        Name the target language, writing system/script, and orthographic variant. Hebrew results do not certify another language. Use a small synthetic sample; do not include private material.
+  - type: input
+    id: target-language-script
+    attributes:
+      label: Target language and script
+      description: Specify the language, writing system/script, and orthographic variant being tested.
+    validations:
+      required: true
   - type: input
     id: environment
     attributes:
       label: Environment and versions
-      description: Include application, library, operating system, and relevant font versions.
+      description: Include actual font/version, application/library/version, operating system, and export path/version.
     validations:
       required: true
   - type: textarea
     id: reproduction
     attributes:
       label: Reproducible synthetic case
-      description: Include minimal input and exact steps to reproduce.
+      description: Provide a small synthetic sample in the target language with mixed LTR tokens, numbers, punctuation, and relevant script features, plus exact steps to reproduce.
     validations:
       required: true
   - type: textarea
@@ -31,6 +38,6 @@ body:
     id: evidence
     attributes:
       label: Evidence and limits
-      description: Report visual, source/structure, and search/copy results separately; say what you did not check.
+      description: Separate source/structure, visual, interaction, and search/copy results. State what remains untested and all limits.
     validations:
       required: true

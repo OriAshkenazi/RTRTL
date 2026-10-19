@@ -1,17 +1,24 @@
-name: Add RTL stack, font, or renderer guidance
-description: Propose guidance for a language stack, font, renderer, or export path.
+name: Add target-language compatibility tests or RTL guidance
+description: Share compatibility evidence for a target RTL language or guidance for a stack, font, renderer, or export path.
 title: "[Stack]: "
 labels: ["documentation"]
 body:
   - type: markdown
     attributes:
       value: >-
-        Use a small synthetic case. Do not include private documents, project details, or private issue history.
+        Name the target language, writing system/script, and orthographic variant. Hebrew results do not certify another language. Use a small synthetic sample; do not include private material.
+  - type: input
+    id: target-language-script
+    attributes:
+      label: Target language and script
+      description: Specify the language, writing system/script, and orthographic variant being tested.
+    validations:
+      required: true
   - type: input
     id: stack
     attributes:
       label: Stack, font, or renderer
-      description: Include relevant application/library and version numbers.
+      description: Include actual font/version, application/library/version, operating system, and export path/version.
       placeholder: Application 1.2, library 3.4, font/version
     validations:
       required: true
@@ -19,14 +26,14 @@ body:
     id: reproduction
     attributes:
       label: Reproducible synthetic case
-      description: Give minimal input and exact steps to reproduce.
+      description: Provide a small synthetic sample in the target language with mixed LTR tokens, numbers, punctuation, and relevant script features, plus exact steps to reproduce.
     validations:
       required: true
   - type: textarea
     id: evidence
     attributes:
       label: Evidence and limits
-      description: Separate visual, source/structure, and search/copy findings. State what was not checked.
+      description: Separate source/structure, visual, interaction, and search/copy findings. State what remains untested and all limits.
     validations:
       required: true
   - type: textarea

@@ -50,6 +50,6 @@ The website has full English and Hebrew editions. Its initial language uses the 
 
 ## Contributions welcome
 
-Bring your stack, renderer fix, font guidance, clearer documentation or small reproducible test case. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](https://github.com/OriAshkenazi/RTRTL/issues/new/choose). Report the actual environment, evidence and limitations so the next person can reproduce your result. More languages are welcome with explicit language-specific evidence; current guidance focuses on Hebrew.
+Bring your stack, renderer fix, font guidance, clearer documentation or small reproducible test case. Compatibility tests for your target RTL language are especially welcome: record its language and writing system, fonts, environment, results and limits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](https://github.com/OriAshkenazi/RTRTL/issues/new/choose). Report enough evidence for the next person to reproduce your result. Current tested guidance focuses on Hebrew; results do not automatically transfer to other languages.
 
 Skill and website code: [MIT](LICENSE). Website fonts: SIL OFL 1.1; [credits](docs/credits.html). No private conversation history is included.
