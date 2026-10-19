@@ -2,6 +2,8 @@
 
 **Give Hebrew the right direction, from the first draft.**
 
+**הזכות לכתוב בכיוון הנכון.**
+
 An open-source AI skill for readable Hebrew and mixed Hebrew/English content. A compact core teaches direction, alignment, logical Unicode order and safe LTR scopes. Format-specific adapters cover web, Office, PDF and more, loaded only when needed.
 
 **[Explore the website](https://oriashkenazi.github.io/RTRTL/) · [Install](INSTALL.md) · [Contribute](CONTRIBUTING.md) · [Compatibility & limits](COMPATIBILITY.md)**
