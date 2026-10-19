@@ -1,0 +1,4 @@
+interface:
+  display_name: "RTRTL"
+  short_description: "Author readable Hebrew with correct RTL from the start"
+  default_prompt: "Use $rtrtl to author this Hebrew content with correct direction, isolated LTR values and readable layout from the start, then verify the target output."

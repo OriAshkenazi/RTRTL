@@ -1,0 +1,38 @@
+name: Add RTL stack, font, or renderer guidance
+description: Propose guidance for a language stack, font, renderer, or export path.
+title: "[Stack]: "
+labels: ["documentation"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Use a small synthetic case. Do not include private documents, project details, or private issue history.
+  - type: input
+    id: stack
+    attributes:
+      label: Stack, font, or renderer
+      description: Include relevant application/library and version numbers.
+      placeholder: Application 1.2, library 3.4, font/version
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproducible synthetic case
+      description: Give minimal input and exact steps to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and limits
+      description: Separate visual, source/structure, and search/copy findings. State what was not checked.
+    validations:
+      required: true
+  - type: textarea
+    id: proposal
+    attributes:
+      label: Proposed guidance
+      description: Describe native direction controls, mixed-script handling, fonts, export behavior, and limitations.
+    validations:
+      required: true

@@ -1,0 +1,36 @@
+name: Report an RTL behavior or guidance issue
+description: Report a reproducible RTL rendering, structure, search, or copy problem.
+title: "[RTL issue]: "
+labels: ["bug"]
+body:
+  - type: markdown
+    attributes:
+      value: >-
+        Use a small synthetic case. Do not include private documents, project details, or private issue history.
+  - type: input
+    id: environment
+    attributes:
+      label: Environment and versions
+      description: Include application, library, operating system, and relevant font versions.
+    validations:
+      required: true
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: Reproducible synthetic case
+      description: Include minimal input and exact steps to reproduce.
+    validations:
+      required: true
+  - type: textarea
+    id: expected
+    attributes:
+      label: Expected and observed behavior
+    validations:
+      required: true
+  - type: textarea
+    id: evidence
+    attributes:
+      label: Evidence and limits
+      description: Report visual, source/structure, and search/copy results separately; say what you did not check.
+    validations:
+      required: true
