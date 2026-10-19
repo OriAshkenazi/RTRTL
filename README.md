@@ -52,6 +52,10 @@ Optional renderer checks and dependencies are documented in [reproducible checks
 
 The website has English, Hebrew and Arabic editions. Its initial language uses the browser’s configured time zone: Israel opens Hebrew; other time zones open English. An unavailable time zone falls back to Hebrew. A saved manual choice takes priority, and direct language links remain available. This is a local preference heuristic, not physical location detection: no location permission, geolocation API, IP lookup or third-party request is used. `?lang=en`, `?lang=he` and `?lang=ar` choose explicitly, including when browser storage is blocked.
 
+## Credits
+
+Thanks to [Bar Amir](https://www.linkedin.com/in/bar-amir/), who came up with the idea long ago, cleverly coined the name RTRTL, and kindly let me use it.
+
 ## Contributions welcome
 
 Bring your stack, renderer fix, font guidance, clearer documentation or small reproducible test case. Compatibility tests for your target RTL language are especially welcome: record its language and writing system, fonts, environment, results and limits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](https://github.com/OriAshkenazi/RTRTL/issues/new/choose). Report enough evidence for the next person to reproduce your result. Current tested guidance focuses on Hebrew; results do not automatically transfer to other languages.
