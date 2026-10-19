@@ -1,0 +1,6 @@
+# Keep historical index.html paths and clean directory URLs available.
+/ /index.html 200
+/he /he/index.html 200
+/he/ /he/index.html 200
+/ar /ar/index.html 200
+/ar/ /ar/index.html 200

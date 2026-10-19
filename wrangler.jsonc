@@ -1,0 +1,18 @@
+{
+  "$schema": "./node_modules/wrangler/config-schema.json",
+  "name": "rtrtl-site",
+  "compatibility_date": "2026-10-19",
+  "workers_dev": true,
+  "assets": {
+    "directory": "./docs",
+    "html_handling": "none",
+    "not_found_handling": "404-page"
+  },
+  "env": {
+    "staging": {
+      "name": "rtrtl-site-staging",
+      "workers_dev": true,
+      "preview_urls": false
+    }
+  }
+}
