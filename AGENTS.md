@@ -4,6 +4,7 @@ RTRTL is a portable Agent Skill with an English/Hebrew/Arabic Cloudflare Workers
 
 - `skills/rtrtl/` is the standalone skill. Keep its core short; load format guides only when needed.
 - `docs/` is the static website served by the `rtrtl-site` Cloudflare Worker. GitHub remains the source repository; validated pushes to `main` deploy through `.github/workflows/deploy-production.yml`.
+- `src/worker.mjs` runs only for the homepage paths listed in `wrangler.jsonc` and serves their Markdown editions for `Accept: text/markdown`; everything else is a static asset. After editing a homepage or the skill, run `python scripts/build_markdown.py` and `python scripts/build_agent_skills.py`.
 - Keep site assets limited to `docs/`; `docs/.assetsignore` excludes GitHub Pages marker files. Wrangler is pinned in `package.json` and `package-lock.json`; use Node.js 22 or newer for deployment.
 - Staging deployments use the manual `.github/workflows/deploy-staging.yml` workflow and the `staging` GitHub environment. Never expose Cloudflare credentials to pull-request or fork workflows.
 - The `docs/_headers` file holds response headers. Keep CSP in report-only mode until staging checks confirm all scripts, styles and fonts work. Add HSTS only after production HTTPS is verified, without preload.
@@ -24,6 +25,7 @@ python -m unittest discover -s tests -v
 node tests/test_locale.cjs
 node tests/test_install_prompt.cjs
 node tests/test_language_picker.cjs
+node tests/test_worker.cjs
 node --check docs/assets/app.js
 node --check skills/rtrtl/scripts/check_browser.cjs
 ```

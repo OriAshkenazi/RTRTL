@@ -7,3 +7,5 @@
 *.yml text eol=lf
 *.md text eol=lf
 *.ttf binary
+*.json text eol=lf
+*.gz binary

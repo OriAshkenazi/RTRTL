@@ -1,3 +1,5 @@
+# Content Signals (https://contentsignals.org/): RTRTL is MIT-licensed and written for AI agents.
 User-agent: *
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 Sitemap: https://rtrtl.org/sitemap.xml

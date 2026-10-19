@@ -26,5 +26,7 @@ jobs:
       - run: node tests/test_locale.cjs
       - run: node tests/test_install_prompt.cjs
       - run: node tests/test_language_picker.cjs
+      - run: node tests/test_worker.cjs
+      - run: node --check src/worker.mjs
       - run: node --check docs/assets/i18n.js
       - run: node --check docs/assets/language-picker.js
