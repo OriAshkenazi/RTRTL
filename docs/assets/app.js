@@ -4,22 +4,16 @@ const alignButton = document.querySelector('#mode-align');
 const demo = document.querySelector('#demo-text');
 const note = document.querySelector('#demo-note');
 const code = document.querySelector('#demo-code');
-const hebrew = document.documentElement.lang === 'he';
+const messages = RTRTL_I18N[document.documentElement.lang] || RTRTL_I18N.en;
 function setMode(rtl) {
   demo.dir = rtl ? 'rtl' : 'ltr';
   demo.classList.toggle('alignment-only', !rtl);
   rtlButton.setAttribute('aria-pressed', String(rtl));
   alignButton.setAttribute('aria-pressed', String(!rtl));
-  note.textContent = hebrew
-    ? (rtl
-      ? 'העברית נקראת מימין לשמאל והקודים והערכים שומרים על הסדר הפנימי שלהם. טקסט המקור אינו משתנה.'
-      : 'הפסקה מיושרת לימין, אך כיוונה מוגדר משמאל לימין. השוו את הכותרת ואת סימני הפיסוק.')
-    : (rtl
-      ? 'Hebrew reads right to left. Codes and values keep their internal order. The original text is unchanged.'
-      : 'The paragraph is aligned right, but its direction is left to right. Compare the heading and punctuation.');
+  note.textContent = rtl ? messages.rtlNote : messages.alignmentNote;
   code.textContent = rtl
-    ? '<p lang="he" dir="rtl">\n  הפרש המדידה: <bdi dir="ltr">-12.50 mm</bdi>.\n</p>'
-    : '<p lang="he" dir="ltr" style="text-align:right">\n  הפרש המדידה: -12.50 mm.\n</p>';
+    ? `<p lang="${messages.demoLanguage}" dir="rtl">\n  ${messages.measurementLabel}<bdi dir="ltr">-12.50 mm</bdi>.\n</p>`
+    : `<p lang="${messages.demoLanguage}" dir="ltr" style="text-align:right">\n  ${messages.measurementLabel}-12.50 mm.\n</p>`;
 }
 rtlButton.addEventListener('click', () => setMode(true));
 alignButton.addEventListener('click', () => setMode(false));
@@ -28,10 +22,11 @@ const installPrompt = document.querySelector('#install-prompt');
 const genericInstallPrompt = installPrompt.textContent.trim();
 const source = 'https://github.com/OriAshkenazi/RTRTL/tree/main/skills/rtrtl';
 const installChecks = 'Copy the complete rtrtl folder with all supporting files. Do not overwrite an existing installation or local edits. Verify that the skill is discoverable and tell me how to invoke it.';
+const usage = skill => messages.usage.replace('{skill}', skill);
 const installPrompts = {
-  codex: `Install RTRTL from ${source} for Codex. Use skill-installer if available; otherwise use the configured Codex skills directory. ${installChecks} Then use $rtrtl for Hebrew and mixed Hebrew/English content.`,
-  claude: `Install RTRTL from ${source} for Claude Code in ~/.claude/skills/rtrtl for personal use. ${installChecks} Then use /rtrtl for Hebrew and mixed Hebrew/English content.`,
-  antigravity: `Install RTRTL from ${source} for Antigravity in this workspace's .agents/skills/rtrtl directory. ${installChecks} Then use RTRTL for Hebrew and mixed Hebrew/English content.`,
+  codex: `Install RTRTL from ${source} for Codex. Use skill-installer if available; otherwise use the configured Codex skills directory. ${installChecks} ${usage('$rtrtl')}`,
+  claude: `Install RTRTL from ${source} for Claude Code in ~/.claude/skills/rtrtl for personal use. ${installChecks} ${usage('/rtrtl')}`,
+  antigravity: `Install RTRTL from ${source} for Antigravity in this workspace's .agents/skills/rtrtl directory. ${installChecks} ${usage('RTRTL')}`,
   other: genericInstallPrompt
 };
 function updateInstallPrompt() {
@@ -52,7 +47,7 @@ if (agentPicker) {
   function syncPicker() {
     const selected = options.find(option => option.dataset.agent === agentSelect.value) || options[0];
     name.textContent = selected.dataset.agent === 'other'
-      ? (hebrew ? 'סוכן אחר' : 'Other agent') : selected.querySelector('span').textContent;
+      ? messages.otherAgent : selected.querySelector('span').textContent;
     for (const option of options) option.setAttribute('aria-selected', String(option === selected));
   }
   function closePicker(returnFocus = false) {
@@ -108,7 +103,7 @@ document.querySelector('#copy-prompt').addEventListener('click', async () => {
   try {
     await navigator.clipboard.writeText(promptAtClick);
     if (prompt.textContent.trim() !== promptAtClick) return;
-    status.textContent = hebrew ? 'הועתק. הדביקו בשיחה עם סוכן ה־AI שלכם.' : 'Copied. Paste into your AI agent’s chat.';
+    status.textContent = messages.copySuccess;
   } catch {
     if (prompt.textContent.trim() !== promptAtClick) return;
     // Keep the prompt available when browser clipboard permission is unavailable.
@@ -117,6 +112,6 @@ document.querySelector('#copy-prompt').addEventListener('click', async () => {
     const selection = window.getSelection();
     selection.removeAllRanges();
     selection.addRange(range);
-    status.textContent = hebrew ? 'העתיקו ידנית את ההנחיה המסומנת.' : 'Copy the selected prompt manually.';
+    status.textContent = messages.copyFallback;
   }
 });

@@ -15,7 +15,7 @@ function simulate({zone='Europe/London', saved=null, url='https://example.com/RT
   vm.runInNewContext(source, {
     URL,
     window:{location:{href:url, replace(value){destination=value;}},localStorage:storage},
-    document:{documentElement:{lang},currentScript:{src:'https://example.com/RTRTL/assets/locale.js'}},
+    document:{documentElement:{lang},currentScript:{src:url.startsWith('file:') ? new URL('assets/locale.js', url).href : 'https://example.com/RTRTL/assets/locale.js'}},
     Intl:{DateTimeFormat(){return{resolvedOptions(){return{timeZone:zone};}}}}
   });
   return {destination, selected};
@@ -33,4 +33,9 @@ assert.equal(simulate({zone:'Asia/Jerusalem',blocked:true}).destination, 'https:
 assert.equal(simulate({url:'https://example.com/RTRTL/?lang=invalid'}).destination, null);
 assert.equal(simulate({zone:'Israel'}).destination, 'https://example.com/RTRTL/he/');
 assert.equal(simulate({zone:''}).destination, 'https://example.com/RTRTL/he/');
-console.log('Language routing: 12 checks passed (no network/geolocation globals provided)');
+assert.equal(simulate({saved:'ar'}).destination, 'https://example.com/RTRTL/ar/');
+assert.equal(simulate({url:'https://example.com/RTRTL/ar/',lang:'ar'}).destination, null);
+assert.equal(simulate({url:'https://example.com/RTRTL/?lang=ar'}).selected, 'ar');
+assert.equal(simulate({url:'https://example.com/RTRTL/?lang=ar',blocked:true}).destination, 'https://example.com/RTRTL/ar/?lang=ar');
+assert.equal(simulate({saved:'ar',url:'file:///site/index.html'}).destination, 'file:///site/ar/index.html');
+console.log('Language routing: 17 checks passed (no network/geolocation globals provided)');

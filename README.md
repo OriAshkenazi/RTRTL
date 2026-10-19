@@ -45,14 +45,17 @@ node --check docs/assets/app.js
 node --check skills/rtrtl/scripts/check_browser.cjs
 node tests/test_locale.cjs
 node tests/test_install_prompt.cjs
+node tests/test_language_picker.cjs
 ```
 
 Optional renderer checks and dependencies are documented in [reproducible checks](skills/rtrtl/references/reproducible-checks.md). Generate only the selected format. The website is static HTML/CSS/JS in `docs/`; preview it with `python -m http.server 8765 --directory docs`. GitHub Pages publishes `main:/docs`.
 
-The website has full English and Hebrew editions. Its initial language uses the browser’s configured time zone: Israel opens Hebrew; other time zones open English. An unavailable time zone falls back to Hebrew. A saved manual choice takes priority, and direct language links remain available. This is a local preference heuristic, not physical location detection: no location permission, geolocation API, IP lookup or third-party request is used. `?lang=en` and `?lang=he` choose explicitly, including when browser storage is blocked.
+The website has English, Hebrew and Arabic editions. Its initial language uses the browser’s configured time zone: Israel opens Hebrew; other time zones open English. An unavailable time zone falls back to Hebrew. A saved manual choice takes priority, and direct language links remain available. This is a local preference heuristic, not physical location detection: no location permission, geolocation API, IP lookup or third-party request is used. `?lang=en`, `?lang=he` and `?lang=ar` choose explicitly, including when browser storage is blocked.
 
 ## Contributions welcome
 
 Bring your stack, renderer fix, font guidance, clearer documentation or small reproducible test case. Compatibility tests for your target RTL language are especially welcome: record its language and writing system, fonts, environment, results and limits. See [CONTRIBUTING.md](CONTRIBUTING.md) and the [issue templates](https://github.com/OriAshkenazi/RTRTL/issues/new/choose). Report enough evidence for the next person to reproduce your result. Current tested guidance focuses on Hebrew; results do not automatically transfer to other languages.
 
 Skill and website code: [MIT](LICENSE). Website fonts: SIL OFL 1.1; [credits](docs/credits.html).
+
+Interactive UI strings live in `docs/assets/i18n.js`; all three editions share `app.js` and the language picker. Main page copy stays in static localized HTML so page direction and sharing metadata are available before JavaScript.

@@ -24,6 +24,14 @@ A focused browser check on 19 October 2026 exercised the synthetic previous/next
 
 These interactions and negative controls were exercised through the Codex in-app browser. The bundled `--checks arrows` CLI path was syntax checked but was not launched end to end in this session. It saves cropped navigation screenshots and separate results without font inspection or PDF export. Other icon libraries, SVGs, native mirroring and exports still require checks in their actual consumer. See [arrow direction](skills/rtrtl/references/arrows.md).
 
+## Website languages and responsive layout
+
+The website has English, Hebrew and Arabic editions at `rtrtl.org`. Interactive translations live in one `docs/assets/i18n.js` catalog and all editions share the same UI script. Page text, direction and sharing metadata remain in localized static HTML. Arabic installation prompts request an Arabic compatibility check; this translation does not certify the skill's other renderers for Arabic.
+
+On 19 October 2026, the Codex in-app browser checked all three editions at 320×760, 360×800, 390×844, 430×932, 844×390 and 1280×900: 18 viewport/language combinations. The check found English header overflow at 320px and 390px. After simplifying narrow-screen navigation, no page or header horizontal overflow remained in that matrix. Compact picker bounds, keyboard dismissal, language switching, saved Arabic preference, demo direction changes and translated copy feedback were exercised. Actual Arabic paragraph glyphs were reported as the bundled Noto Sans Arabic font through browser font inspection.
+
+These are desktop-browser viewport simulations, not tests on physical iOS/Android devices or certification of other browser engines. The existing Office/PDF results remain Hebrew-specific. CI checks translation-key parity, initial/dynamic demo-note consistency, reciprocal three-language links, metadata domains, all agent prompt variants and 17 local language-routing cases without geolocation or network APIs.
+
 ## Efficiency
 
 The authoring core uses progressive disclosure: ordinary replies need no tools; an artifact normally needs one adapter. Earlier local optimization reduced an equivalent core from roughly 1,524 to 679 `o200k_base` tokens. These are local tokenizer estimates, not billed model usage or a guarantee of savings; release edits can change the count. Sixteen local execution probes checked format selection, conditional dependencies and rejection of unsupported manifest-only checking. Public CI checks packaging, installation and HTML fixture generation; it does not run Office or certify native rendering.

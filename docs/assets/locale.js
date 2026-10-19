@@ -3,7 +3,8 @@
   'use strict';
   const current = new URL(window.location.href);
   const explicit = current.searchParams.get('lang');
-  const choice = explicit === 'he' || explicit === 'en' ? explicit : null;
+  const languages = ['en', 'he', 'ar'];
+  const choice = languages.includes(explicit) ? explicit : null;
   const key = 'rtrtl-language';
   let saved = null;
   try {
@@ -14,8 +15,8 @@
   // A direct link to a language edition stays usable regardless of the default.
   const pageLanguage = document.documentElement.lang;
   let preferred = choice;
-  if (!preferred && pageLanguage === 'he') return;
-  if (!preferred && (saved === 'he' || saved === 'en')) preferred = saved;
+  if (!preferred && (pageLanguage === 'he' || pageLanguage === 'ar')) return;
+  if (!preferred && languages.includes(saved)) preferred = saved;
   if (!preferred) {
     let zone = '';
     try { zone = Intl.DateTimeFormat().resolvedOptions().timeZone; } catch { /* Hebrew fallback. */ }
@@ -23,7 +24,8 @@
   }
   if (preferred === pageLanguage) return;
   const base = new URL('../', document.currentScript.src);
-  const target = new URL(preferred === 'he' ? 'he/' : './', base);
+  const target = new URL(preferred === 'en' ? './' : `${preferred}/`, base);
+  if (target.protocol === 'file:') target.pathname += 'index.html';
   target.search = current.search;
   target.hash = current.hash;
   window.location.replace(target.href);

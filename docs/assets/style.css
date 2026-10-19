@@ -1,3 +1,4 @@
+@font-face{font-family:Arabic;src:url("fonts/NotoSansArabic.ttf") format("truetype");font-weight:100 900;font-style:normal;font-display:swap}
 @font-face{font-family:Geist;src:url(fonts/Geist.ttf) format('truetype');font-weight:100 900;font-display:swap}
 @font-face{font-family:Hebrew;src:url(fonts/NotoSansHebrew.ttf) format('truetype');font-weight:100 900;font-display:swap}
 :root{--paper:#f4f3ed;--ink:#22251f;--muted:#5f655b;--line:#cdd0c4;--mint:#d9f681;--purple:#bfb1f9;--pink:#f7b8ce;--radius:10px}
@@ -71,3 +72,5 @@ bdi{unicode-bidi:isolate}
 .agent-trigger{white-space:nowrap}
 .prompt-top:has(.agent-picker--compact) .copy-button{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}
 .prompt-top .copy-button svg{fill:none;stroke:currentColor;stroke-width:1.2;stroke-linecap:round;stroke-linejoin:round;flex-shrink:0}
+
+@media(max-width:450px){.header>nav{display:none}.header{gap:12px}.header-links{gap:10px}}
