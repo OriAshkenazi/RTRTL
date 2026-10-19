@@ -4,15 +4,15 @@ const fs = require('node:fs');
 const path = require('node:path');
 const vm = require('node:vm');
 const source = fs.readFileSync(path.join(__dirname, '../docs/assets/language-picker.js'), 'utf8');
-function simulate(blocked = false) {
+function simulate(blocked = false, protocol = 'https:') {
   const doc = {handlers:{}, addEventListener(type, fn) { this.handlers[type] = fn; }};
   const element = () => ({handlers:{}, focus() { doc.activeElement = this; }, addEventListener(type, fn) { this.handlers[type] = fn; }});
   const trigger = element();
-  const links = ['en', 'he', 'ar'].map(language => Object.assign(element(), {dataset:{language}}));
+  const links = ['en', 'he', 'ar'].map(language => Object.assign(element(), {dataset:{language}, href:`${protocol}//example.com/${language === 'en' ? '' : language + '/'}`}));
   const picker = Object.assign(element(), {open:false, querySelector:() => trigger, querySelectorAll:() => links, contains:el => [picker, trigger, ...links].includes(el)});
   doc.querySelector = () => picker;
   const saved = {};
-  vm.runInNewContext(source, {document:doc, window:{localStorage:{setItem(key, value) { if (blocked) throw Error('blocked'); saved[key] = value; }}}});
+  vm.runInNewContext(source, {URL, document:doc, window:{location:{protocol}, localStorage:{setItem(key, value) { if (blocked) throw Error('blocked'); saved[key] = value; }}}});
   return {doc, trigger, links, picker, saved, key(key) { let prevented = false; picker.handlers.keydown({key, preventDefault() { prevented = true; }}); return prevented; }};
 }
 const page = simulate();
@@ -40,7 +40,11 @@ assert.equal(page.picker.open, false, 'outside click dismisses');
 page.key('ArrowDown');
 page.picker.handlers.focusout({relatedTarget:{}});
 assert.equal(page.picker.open, false, 'tabbing outside dismisses');
-assert.doesNotThrow(() => simulate(true).links[1].handlers.click());
+const blocked = simulate(true);
+blocked.links[0].handlers.click();
+assert.equal(blocked.links[0].href, 'https://example.com/?lang=en');
+assert.equal(page.links[2].href, 'https://example.com/ar/');
+assert.equal(simulate(false, 'file:').links[0].href, 'file://example.com/index.html');
 const docs = path.join(__dirname, '../docs');
 const htmlByLanguage = {
   en: fs.readFileSync(path.join(docs, 'index.html'), 'utf8'),
@@ -49,9 +53,9 @@ const htmlByLanguage = {
 };
 const canonical = {en:'https://rtrtl.org/', he:'https://rtrtl.org/he/', ar:'https://rtrtl.org/ar/'};
 const pickerHrefs = {
-  en:{en:'./index.html?lang=en', he:'he/index.html?lang=he', ar:'ar/index.html?lang=ar'},
-  he:{en:'../index.html?lang=en', he:'./index.html?lang=he', ar:'../ar/index.html?lang=ar'},
-  ar:{en:'../index.html?lang=en', he:'../he/index.html?lang=he', ar:'./index.html?lang=ar'}
+  en:{en:'./', he:'he/', ar:'ar/'},
+  he:{en:'../', he:'./', ar:'../ar/'},
+  ar:{en:'../', he:'../he/', ar:'./'}
 };
 const pagePath = {en:'index.html', he:'he/index.html', ar:'ar/index.html'};
 const pickerLabels = {en:'English', he:'עברית', ar:'العربية'};
