@@ -29,7 +29,7 @@ def validate():
     if not core.startswith('---\nname: rtrtl\n') or 'description:' not in core.split('---')[1]:
         errors.append('Skill frontmatter must identify rtrtl and describe its trigger')
     for path in ROOT.rglob('*'):
-        if any(part in {'.git', '__pycache__'} for part in path.parts) or not path.is_file():
+        if any(part in {'.git', '__pycache__', 'node_modules'} for part in path.parts) or not path.is_file():
             continue
         if path.suffix == '.py':
             try:
@@ -44,7 +44,12 @@ def validate():
                 for target in re.findall(r'\[[^\]]*\]\(([^)\s]+)\)', body):
                     if re.match(r'^[a-z]+:|^#', target, re.I):
                         continue
-                    if not (path.parent / target.split('#')[0]).exists():
+                    target_value = target.split('#')[0]
+                    if target_value.startswith('/') and path.is_relative_to(ROOT / 'docs'):
+                        resolved = ROOT / 'docs' / target_value.lstrip('/')
+                    else:
+                        resolved = path.parent / target_value
+                    if not resolved.exists():
                         errors.append(f'Broken link in {path.relative_to(ROOT)}: {target}')
             if path.suffix == '.html':
                 page = PageLinks()
@@ -52,7 +57,12 @@ def validate():
                 for target in page.targets:
                     if re.match(r'^[a-z]+:|^#|^//', target, re.I):
                         continue
-                    if not (path.parent / target.split('#')[0].split('?')[0]).exists():
+                    target_value = target.split('#')[0].split('?')[0]
+                    if target_value.startswith('/') and path.is_relative_to(ROOT / 'docs'):
+                        resolved = ROOT / 'docs' / target_value.lstrip('/')
+                    else:
+                        resolved = path.parent / target_value
+                    if not resolved.exists():
                         errors.append(f'Broken page asset/link in {path.relative_to(ROOT)}: {target}')
     with tempfile.TemporaryDirectory(prefix='rtrtl-fixture-') as output:
         result = subprocess.run([sys.executable, '-S', str(skill / 'scripts' / 'build_fixtures.py'), '--out', output, '--formats', 'html'], capture_output=True, text=True, encoding='utf-8')

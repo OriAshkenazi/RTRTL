@@ -1,9 +1,14 @@
 # Working on RTRTL
 
-RTRTL is a portable Agent Skill with an English/Hebrew/Arabic GitHub Pages site.
+RTRTL is a portable Agent Skill with an English/Hebrew/Arabic Cloudflare Workers Static Assets site.
 
 - `skills/rtrtl/` is the standalone skill. Keep its core short; load format guides only when needed.
-- `docs/` is the static website. `main:/docs` deploys to GitHub Pages.
+- `docs/` is the static website served by the `rtrtl-site` Cloudflare Worker. GitHub remains the source repository; validated pushes to `main` deploy through `.github/workflows/deploy-production.yml`.
+- Keep site assets limited to `docs/`; `docs/.assetsignore` excludes GitHub Pages marker files. Wrangler is pinned in `package.json` and `package-lock.json`; use Node.js 22 or newer for deployment.
+- Staging deployments use the manual `.github/workflows/deploy-staging.yml` workflow and the `staging` GitHub environment. Never expose Cloudflare credentials to pull-request or fork workflows.
+- The `docs/_headers` file holds response headers. Keep CSP in report-only mode until staging checks confirm all scripts, styles and fonts work. Add HSTS only after production HTTPS is verified, without preload.
+- Cloudflare DNS, custom domains, HTTPS/TLS, DNSSEC, WAF, Web Analytics and Email Routing are account configuration; document and verify these separately from repository changes. Preserve mail records and do not alter other zones.
+- Rollback: restore the prior GitHub Pages DNS records and HTTPS behavior from the migration evidence. Keep Pages publishing available until the Workers production deployment is verified.
 - `INSTALL.md` explains agent-specific installation. Check official host documentation before changing directory or invocation advice.
 - Write canonical website copy in English first, then adapt naturally into Hebrew. English describes RTL languages generally; the Hebrew problem description focuses on Hebrew.
 - Use **סקיל** and **סוכן ה־AI שלכם** in Hebrew. Preserve **הזכות לכתוב בכיוון הנכון**. Isolate complete Latin names, codes and values in Hebrew markup.
@@ -23,4 +28,4 @@ node --check docs/assets/app.js
 node --check skills/rtrtl/scripts/check_browser.cjs
 ```
 
-Check affected English/Hebrew/Arabic screens and interactions in a browser at desktop and narrow widths. For ordinary copy edits, avoid Office launches and unrelated renderer suites. Keep scratch evidence outside the public repository.
+Check affected English/Hebrew/Arabic screens and interactions in a browser at desktop and narrow widths. For infrastructure changes, also verify staging routes, redirects, status codes, MIME types, response headers, CSP reports and cache freshness before production cutover. For ordinary copy edits, avoid Office launches and unrelated renderer suites. Keep scratch evidence outside the public repository.
