@@ -41,14 +41,14 @@ def first_strong(text):
 
 class ShareMetadataTests(unittest.TestCase):
     def test_share_image_is_available_to_static_crawlers_in_all_locales(self):
-        image = ROOT / 'docs/assets/social-preview-v1.png'
+        image = ROOT / 'docs/assets/social-preview-v2.png'
         raw = image.read_bytes()
         self.assertEqual(raw[:8], b'\x89PNG\r\n\x1a\n')
         self.assertEqual(struct.unpack('>II', raw[16:24]), (1200, 630))
         for locale in ('index.html', 'he/index.html', 'ar/index.html'):
             with self.subTest(locale=locale):
                 page = Metadata((ROOT / 'docs' / locale).read_text(encoding='utf-8'))
-                self.assertEqual(page.meta['og:image'], 'https://rtrtl.org/assets/social-preview-v1.png')
+                self.assertEqual(page.meta['og:image'], 'https://rtrtl.org/assets/social-preview-v2.png')
                 self.assertEqual(page.meta['twitter:image'], page.meta['og:image'])
                 self.assertEqual(page.meta['og:image:type'], 'image/png')
                 self.assertEqual(page.meta['og:image:width'], '1200')
