@@ -65,9 +65,11 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
   }
   function points() {
     const base = paper.getBoundingClientRect();
+    const underline = parseFloat(getComputedStyle(page).fontSize) * .72;
     return words().map(line => line.map(word => {
       const box = word.getBoundingClientRect();
-      return {x: box.left + box.width / 2 - base.left, y: box.bottom - base.top + 2, code: word.closest('bdi')};
+      // Centres, not edges: inline and inline-block boxes of the same word differ in height.
+      return {x: box.left + box.width / 2 - base.left, y: box.top + box.height / 2 - base.top + underline, code: word.closest('bdi')};
     }));
   }
   // Reading moves right to left between words and left to right inside one Latin code.
@@ -191,8 +193,9 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     return true;
   }
 
-  // A right-to-left wave: each word lifts as it passes and lands in place while the thread pulls straight.
+  // A right-to-left wave: each word glides along a low arc to its place while the thread pulls straight.
   async function untangle(id) {
+    const centre = box => ({x: box.left + box.width / 2, y: box.top + box.height / 2});
     const from = words().flat().map(word => word.getBoundingClientRect());
     setDirection(false);
     const to = words().flat();
@@ -202,16 +205,17 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
     sweep.animate([{left: '100%', opacity: 0}, {opacity: 1, offset: .15}, {opacity: 1, offset: .8}, {left: '-38%', opacity: 0}], {duration: 1150, easing: 'cubic-bezier(.45,0,.3,1)'});
     const flights = to.map((word, i) => {
       const box = word.getBoundingClientRect();
-      const dx = from[i].left - box.left;
-      const dy = from[i].top - box.top;
+      const dx = centre(from[i]).x - centre(box).x;
+      const dy = centre(from[i]).y - centre(box).y;
+      // Longer trips rise a little higher; nothing jumps vertically on its own.
+      const rise = Math.min(10, 3 + Math.abs(dx) * .03);
       // The wave reaches words on the right first.
       const delay = Math.max(0, (width - (Math.max(from[i].right, box.right) - base.left)) / width) * 620 + 60;
       return word.animate([
         {transform: `translate(${dx}px,${dy}px)`},
-        {transform: `translate(${dx}px,${dy - 16}px) scale(1.07)`, offset: .22},
-        {transform: `translate(${dx * .2}px,-6px) scale(1.04)`, offset: .75},
+        {transform: `translate(${dx / 2}px,${dy / 2 - rise}px)`, offset: .5},
         {transform: 'none'}
-      ], {duration: 820, delay, easing: 'cubic-bezier(.55,0,.25,1)', fill: 'backwards'});
+      ], {duration: 820, delay, easing: 'cubic-bezier(.45,0,.25,1)', fill: 'backwards'});
     });
     let landed = false;
     Promise.all(flights.map(flight => flight.finished)).then(() => { landed = true; }, () => {});
