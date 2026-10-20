@@ -135,7 +135,8 @@ html[lang=en] .rtl-state{font-size:10px;letter-spacing:.07em;text-transform:uppe
 .rtl-path{position:absolute;inset:0;inline-size:100%;block-size:100%;z-index:2;pointer-events:none;overflow:visible}
 .rtl-path .seg{fill:none;stroke-width:2.6;stroke-linecap:round;transition:stroke .25s,opacity .6s}
 .rtl-path .fwd{stroke:#5f7843}.rtl-path .isl{stroke:#7d64d6}.rtl-path .back{stroke:#d2557f;stroke-width:3}
-.rtl-path.is-resting .seg{opacity:.28}
+/* The finished thread fades slowly and keeps its colour, so the ending settles rather than snaps. */
+.rtl-path.is-resting .seg{opacity:.4;transition:opacity 1.4s ease}
 .rtl-path .flash{fill:none;stroke:#d2557f;stroke-width:2}
 .rtl-path .eye{fill:#6650b1}.rtl-path .halo{fill:#8f7fd680}
 .rtl-sweep{position:absolute;inset-block:0;inline-size:38%;left:100%;z-index:0;pointer-events:none;background:linear-gradient(90deg,transparent,#d9f68199 45%,#d9f68199 55%,transparent);opacity:0}

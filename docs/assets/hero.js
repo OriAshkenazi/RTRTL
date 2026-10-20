@@ -275,7 +275,14 @@ for (const demo of document.querySelectorAll('[data-rtl-demo]')) {
       if (!await wait(350, id)) return;
       if (!await read(id, false)) return;
       if (!await wait(500, id)) return;
-      settled();
+      // Ease the thread that was just drawn into its resting state instead of rebuilding it.
+      pause.hidden = true;
+      pause.textContent = pause.dataset.pause;
+      for (const path of segments.flat()) path.style.opacity = '';
+      svg.classList.add('is-resting');
+      page.classList.add('is-lit');
+      count.classList.add('is-done');
+      demo.dataset.phase = 'done';
     } catch (error) {
       if (!live(id)) return;
       console.error(error);
