@@ -7,9 +7,9 @@ RTRTL is a portable Agent Skill with an English/Hebrew/Arabic Cloudflare Workers
 - `src/worker.mjs` runs only for the homepage paths listed in `wrangler.jsonc` and serves their Markdown editions for `Accept: text/markdown`; everything else is a static asset. After editing a homepage or the skill, run `python scripts/build_markdown.py` and `python scripts/build_agent_skills.py`.
 - Keep site assets limited to `docs/`; `docs/.assetsignore` excludes GitHub Pages marker files. Wrangler is pinned in `package.json` and `package-lock.json`; use Node.js 22 or newer for deployment.
 - Staging deployments use the manual `.github/workflows/deploy-staging.yml` workflow and the `staging` GitHub environment. Never expose Cloudflare credentials to pull-request or fork workflows.
-- The `docs/_headers` file holds response headers. Keep CSP in report-only mode until staging checks confirm all scripts, styles and fonts work. Add HSTS only after production HTTPS is verified, without preload.
+- The `docs/_headers` file holds response headers. CSP is enforced and HSTS is on without preload; check a new script, style or font source on staging before adding it to CSP.
 - Cloudflare DNS, custom domains, HTTPS/TLS, DNSSEC, WAF, Web Analytics and Email Routing are account configuration; document and verify these separately from repository changes. Preserve mail records and do not alter other zones.
-- Rollback: restore the prior GitHub Pages DNS records and HTTPS behavior from the migration evidence. Keep Pages publishing available until the Workers production deployment is verified.
+- Rollback: restore the prior GitHub Pages DNS records and HTTPS behavior from the migration evidence. GitHub Pages stays published as the rollback target; the repository website link points to `https://rtrtl.org/`.
 - `INSTALL.md` explains agent-specific installation. Check official host documentation before changing directory or invocation advice.
 - Write canonical website copy in English first, then adapt naturally into Hebrew. English describes RTL languages generally; the Hebrew problem description focuses on Hebrew.
 - Use **סקיל** and **סוכן ה־AI שלכם** in Hebrew. Preserve **הזכות לכתוב בכיוון הנכון**. Isolate complete Latin names, codes and values in Hebrew markup.

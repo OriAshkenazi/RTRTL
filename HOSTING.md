@@ -4,7 +4,7 @@
 
 GitHub (`main`) remains the source of truth. Cloudflare Workers Static Assets serves only `docs/`, with no application Worker script. Wrangler is pinned in the repository and needs Node.js 22 or newer. `.github/workflows/validate.yml` runs the required checks. A successful `push` validation for `main` triggers the serialized production deployment workflow, which checks out the exact SHA from that validation run. Pull requests, including forks, never receive production credentials. Production moved to Cloudflare on 2026-10-19 after staging validation. Both `rtrtl.org` and `www.rtrtl.org` are proxied Worker custom domains; HTTPS `www` permanently redirects to the apex with path and query preserved. HTTP first redirects to HTTPS. GitHub Pages is retained temporarily as a rollback option and no longer receives domain traffic. Each production deployment runs public route, content, MIME and security-header checks, with bounded retries for edge propagation.
 
-The staging workflow runs on pushes to `cloudflare-workers-migration`; manual dispatch also accepts a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging`. Use `https://staging.rtrtl.org` for staging; the generated `workers.dev` hostname is also available once Cloudflare activates its certificate. Both staging hostnames are excluded from search indexing by `_headers`. Custom domains are managed in Cloudflare separately from the deployment credentials. Review staging before routing production traffic.
+The staging workflow runs only by manual dispatch: it takes a full commit SHA already pushed to this repository, runs the required checks on that exact SHA, and deploys it to `rtrtl-site-staging`. Use `https://staging.rtrtl.org` for staging; the generated `workers.dev` hostname is also available once Cloudflare activates its certificate. Both staging hostnames are excluded from search indexing by `_headers`. Custom domains are managed in Cloudflare separately from the deployment credentials. Review staging before routing production traffic.
 
 ## One-time GitHub configuration
 
@@ -12,7 +12,9 @@ Create protected GitHub environments named `staging` and `production`. Add a `CL
 
 Install and authenticate Wrangler locally with the official `npx wrangler login` flow when interactive access is available. For deployment, use `npm ci` and the pinned CLI. The local OAuth session is for account inspection and setup; CI uses environment secrets.
 
-## Staging and production cutover
+## Staging and production cutover (completed 2026-10-19)
+
+Kept as the record of the migration and as the checklist for any future host move.
 
 1. Run the repository checks and deploy the reviewed commit to staging.
 2. Check all English, Hebrew and Arabic pages, credits pages, picker and language persistence, query parameters, install prompts, copy actions, fonts, MIME types, sitemap, and real 404 status.
@@ -25,7 +27,7 @@ Install and authenticate Wrangler locally with the official `npx wrangler login`
 
 ## Rollback
 
-Until production verification is complete, preserve the prior GitHub Pages custom-domain setup and its four apex A records (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) plus the `www` CNAME to `oriashkenazi.github.io`. To roll back, restore those web records and the previous Pages production settings while leaving mail and unrelated DNS records untouched. Keep the Cloudflare Worker deployment available for investigation; do not remove the zone or registered domain.
+Production was verified on 2026-10-19; GitHub Pages remains published from `main:/docs` as the rollback target. Until it is retired, preserve the prior GitHub Pages custom-domain setup and its four apex A records (`185.199.108.153`, `185.199.109.153`, `185.199.110.153`, `185.199.111.153`) plus the `www` CNAME to `oriashkenazi.github.io`. To roll back, restore those web records and the previous Pages production settings while leaving mail and unrelated DNS records untouched. Keep the Cloudflare Worker deployment available for investigation; do not remove the zone or registered domain.
 
 ## Operational controls
 

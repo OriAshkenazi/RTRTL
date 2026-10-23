@@ -40,6 +40,8 @@ def validate():
             body = path.read_text(encoding='utf-8')
             if path.resolve() != Path(__file__).resolve() and re.search(r'C:[/\\]Users[/\\]|historical-evidence|rtl-history-ledger|session_meta', body, re.I):
                 errors.append(f'Private/local material: {path.relative_to(ROOT)}')
+            if 'oriashkenazi.github.io/rtrtl' in body.lower() and path.resolve() != Path(__file__).resolve():
+                errors.append(f'Old GitHub Pages address; link to https://rtrtl.org/ instead: {path.relative_to(ROOT)}')
             if path.suffix == '.md':
                 for target in re.findall(r'\[[^\]]*\]\(([^)\s]+)\)', body):
                     if re.match(r'^[a-z]+:|^#', target, re.I):

@@ -10,7 +10,7 @@ the skill files without installing rendering tools or launching Office.
 
 ## Install with your AI agent
 
-Use the [website’s agent selector](https://oriashkenazi.github.io/RTRTL/?lang=en#install)
+Use the [website’s agent selector](https://rtrtl.org/?lang=en#install)
 for a prompt tailored to Codex, Claude Code or Antigravity. Choose “Other” for
 any other coding agent that supports skills, or paste this generic prompt:
 
