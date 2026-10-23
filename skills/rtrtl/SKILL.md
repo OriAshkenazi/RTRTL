@@ -13,6 +13,7 @@ Apply correct direction while writing; preserve the requested format and editabi
 - Set known Hebrew paragraphs/headings to RTL, including English-first headings. Direction, physical alignment and font are separate. Keep whole LTR codes, signed quantities/units, dates, paths and English phrases in native directional scopes; surrounding sentence punctuation stays in the Hebrew scope.
 - Prefer native runs/markup to hidden controls. Never put display-only controls into canonical IDs, URLs or data. Choose the actual consumer's supported adapter: Unicode isolates are not supported equally everywhere (notably the tested Excel export).
 - Use the task's Hebrew-capable fonts/weights and complex-script faces. Keep code/formulas/axes LTR where required; do not mirror every graphic or control.
+- Keep a number on the line of its word or unit and a spaced separator (`·`) on the line of both neighbours: glue them with NBSP and read [line breaks](references/text.md#line-breaks-any-renderer) for narrow or large-text layouts.
 - For directional controls, follow the target's meaning and verify rendered arrows and interactions; do not mirror every arrow. Read [arrow direction](references/arrows.md) when controls, maps, diagrams or media are in scope.
 
 ## Spend effort where it changes the result
