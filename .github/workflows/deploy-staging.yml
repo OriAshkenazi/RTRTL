@@ -1,7 +1,5 @@
 name: Deploy RTRTL staging
 on:
-  push:
-    branches: [cloudflare-workers-migration]
   workflow_dispatch:
     inputs:
       commit_sha:

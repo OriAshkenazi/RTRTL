@@ -48,7 +48,7 @@ node tests/test_install_prompt.cjs
 node tests/test_language_picker.cjs
 ```
 
-Optional renderer checks and dependencies are documented in [reproducible checks](skills/rtrtl/references/reproducible-checks.md). Generate only the selected format. The website is static HTML/CSS/JS in `docs/`; preview it with `python -m http.server 8765 --directory docs`. Cloudflare Workers Static Assets is configured as the target host; see [hosting and deployment](HOSTING.md) for the migration and rollback sequence.
+Optional renderer checks and dependencies are documented in [reproducible checks](skills/rtrtl/references/reproducible-checks.md). Generate only the selected format. The website is static HTML/CSS/JS in `docs/`; preview it with `python -m http.server 8765 --directory docs`. Cloudflare Workers Static Assets serves it at `rtrtl.org`; see [hosting and deployment](HOSTING.md) for deployment and rollback.
 
 The website has English, Hebrew and Arabic editions. Its initial language uses the browser’s configured time zone: Israel opens Hebrew; other time zones open English. An unavailable time zone falls back to Hebrew. A saved manual choice takes priority, and direct language links remain available. This is a local preference heuristic, not physical location detection: no location permission, geolocation API, IP lookup or third-party request is used. `?lang=en`, `?lang=he` and `?lang=ar` choose explicitly, including when browser storage is blocked.
 
