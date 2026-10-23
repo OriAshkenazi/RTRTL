@@ -9,6 +9,16 @@
 - RTL scrollers commonly use `0` at the right edge and negative offsets toward the left in Chromium. Detect the actual direction/visible content. Do not copy `scrollLeft = scrollWidth - clientWidth` from a deliberately LTR scroller to an RTL one.
 - Wait for `document.fonts.ready` and image decoding before capture/print. Inspect actual platform fonts through CDP when available, and the resulting PDF's font resources. CSS font weight 800 may select a different family/face than 700.
 
+## Line breaks and narrow screens
+
+Apply the [line-break rules](text.md#line-breaks-any-renderer) to the text, then avoid layouts that split it anyway:
+
+- Never leave bare text beside inline elements directly inside a flex (or grid) container. Each text node becomes an anonymous flex item, so one sentence splits into columns that each wrap on their own (`12` and `מ״ב` on two lines, a `·` dangling at a column end). Wrap the words in a single span.
+- An atomic inline (`inline-flex`, `inline-block`, a `<button>`) can still begin a new line after a NBSP in Chromium. Keep a glued separator inside plain inline text, or move the count onto its own line (for example a second "supporting text" line, `4 מתכונים`).
+- A centred column-flex child (`align-items: center`) is as wide as its content's minimum, so a long unbreakable value (an email, a code) makes it wider than its container even under `overflow-wrap: break-word`; `text-wrap: balance` does not prevent this. Give it `max-inline-size: 100%`. In grids holding user-supplied names, use `minmax(0, 1fr)` tracks and `overflow-wrap: anywhere`.
+- Where the canonical text must stay unchanged, a short value in its own element can take `white-space: nowrap` instead of NBSP (`<bdi dir="ltr" class="value">-12.50 mm</bdi>`).
+- Check narrow phone widths (320px) and the largest text size, not only the default. In mobile emulation an overflowing page zooms out and the layout viewport widens, which hides the overflow from later measurements; check overflow yourself. `check_browser.cjs --checks lines` (see [reproducible checks](reproducible-checks.md)) measures rendered line boxes for these cases.
+
 [Primary API reference](https://www.w3.org/International/articles/inline-bidi-markup/bidi_examples.en). Use installed APIs or browse only if the actual version/behavior is unresolved.
 
 Minimal authored mixed-content example:

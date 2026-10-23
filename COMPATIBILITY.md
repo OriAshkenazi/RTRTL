@@ -24,6 +24,12 @@ A focused browser check on 19 October 2026 exercised the synthetic previous/next
 
 These interactions and negative controls were exercised through the Codex in-app browser. The bundled `--checks arrows` CLI path was syntax checked but was not launched end to end in this session. It saves cropped navigation screenshots and separate results without font inspection or PDF export. Other icon libraries, SVGs, native mirroring and exports still require checks in their actual consumer. See [arrow direction](skills/rtrtl/references/arrows.md).
 
+## Line breaks
+
+On 23 October 2026, `check_browser.cjs --checks lines` ran on macOS 27.0.1 in Chrome 155.0.8059.85 and in Playwright's WebKit 27.2 (build 2370), using the synthetic HTML fixture with Arial requested. Chrome's font inspection reported ArialMT for the Hebrew line cases; WebKit's actual font was not inspected. The good forms of the three Hebrew line cases and the 13-case corpus passed at 1280px, and in mobile emulation at 320px and 412px, each with normal and 150% root text (19 checks per engine). A scratch copy with the bad forms swapped in failed in both engines: the status row split `12` from `מ״ב` and left `·` off the line of its neighbours at 320px and 412px; the count `· 4` sat between the lines of a wrapping button name at every width; the centred error line with a long email overflowed at 320px and at 412px with large text. The first run also found the corpus's `-12.50 mm` and `1,234.50 m³` splitting at 320px with large text; the HTML fixture now keeps short quantities on one line without changing the canonical text.
+
+This is Hebrew only, in two desktop engines' viewport emulation, not physical phones, OS text-size settings, Arabic or other renderers. The check covers numbers and spaced separators, not other stranded punctuation.
+
 ## Website languages and responsive layout
 
 The website has English, Hebrew and Arabic editions at `rtrtl.org`. Interactive translations live in one `docs/assets/i18n.js` catalog and all editions share the same UI script. Page text, direction and sharing metadata remain in localized static HTML. Arabic installation prompts request an Arabic compatibility check; this translation does not certify the skill's other renderers for Arabic.

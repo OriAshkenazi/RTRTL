@@ -1,18 +1,20 @@
 /* Synthetic local browser regression; no user profile, network input or publication.
-   node check_browser.cjs --input DIR --modules NODE_MODULES [--channel chrome] [--checks arrows]
+   node check_browser.cjs --input DIR --modules NODE_MODULES [--channel chrome] [--browser chromium|webkit] [--checks arrows|lines]
 */
 const fs=require('fs'),path=require('path'),crypto=require('crypto'),{pathToFileURL}=require('url');
 const args=Object.fromEntries(process.argv.slice(2).reduce((a,v,i,s)=>{if(v.startsWith('--'))a.push([v.slice(2),s[i+1]]);return a},[]));
 if(!args.input)throw Error('--input required');
-for(const key of Object.keys(args))if(!['input','modules','channel','checks'].includes(key))throw Error('Unknown option: --'+key);
-if(Object.hasOwn(args,'checks')&&args.checks!=='arrows')throw Error('--checks must be arrows, or omitted for the full check');
-const {chromium}=require(args.modules?path.join(path.resolve(args.modules),'playwright'):'playwright');
+for(const key of Object.keys(args))if(!['input','modules','channel','checks','browser'].includes(key))throw Error('Unknown option: --'+key);
+if(Object.hasOwn(args,'checks')&&!['arrows','lines'].includes(args.checks))throw Error('--checks must be arrows or lines, or omitted for the full check');
+const engine=args.browser||'chromium';if(!['chromium','webkit'].includes(engine))throw Error('--browser must be chromium or webkit');
+if(engine!=='chromium'&&args.checks!=='lines')throw Error('--browser webkit is supported only with --checks lines');
+const playwright=require(args.modules?path.join(path.resolve(args.modules),'playwright'):'playwright'),{chromium}=playwright;
 const root=path.resolve(args.input), manifest=JSON.parse(fs.readFileSync(path.join(root,'fixtures.json'),'utf8'));
 const fixtureSha256=crypto.createHash('sha256').update(fs.readFileSync(path.join(root,'fixture.html'))).digest('hex');
 const assertions=[];const check=(name,ok,detail)=>assertions.push({name,pass:!!ok,detail});
 (async()=>{
  let browser;try{
- browser=await chromium.launch({headless:true,channel:args.channel||'chrome'});
+ browser=engine==='webkit'?await playwright.webkit.launch({headless:true}):await chromium.launch({headless:true,channel:args.channel||'chrome'});
  const context=await browser.newContext({viewport:{width:1280,height:900}});const page=await context.newPage();
  const consoleErrors=[];page.on('pageerror',e=>consoleErrors.push(e.message));
  const route=pathToFileURL(path.join(root,'fixture.html')).href;
@@ -50,6 +52,77 @@ const assertions=[];const check=(name,ok,detail)=>assertions.push({name,pass:!!o
   const report={mode:'arrows',browserVersion:browser.version(),channel:args.channel||'chrome',fixtureSha256,manifestFixtureSha256:manifest.sha256['fixture.html'],assertions,visualReview:'pending; inspect arrows-1280.png and arrows-390.png for final glyph pixels'};
   fs.writeFileSync(path.join(root,'arrows-results.json'),JSON.stringify(report,null,2));
   await browser.close();const failed=assertions.filter(x=>!x.pass);console.log(JSON.stringify({mode:'arrows',checks:assertions.length,passed:assertions.length-failed.length,failed}));if(failed.length)process.exitCode=1;return;
+ }
+ if(args.checks==='lines'){
+  // Rendered line boxes: a number and its word, or a spaced separator and its neighbours, on different lines, or a page wider than the screen.
+  const scan=()=>{
+   const INLINE_TAGS=new Set(['SPAN','BDI','BDO','B','STRONG','I','EM','SMALL','A','BUTTON','LABEL','ABBR','DATA','TIME','MARK','SUB','SUP','S','U','Q','CITE','KBD','VAR','OUTPUT']);
+   const SKIP='script,style,template,pre,code,textarea,svg,noscript,[hidden]';
+   const rowFlex=el=>{const s=getComputedStyle(el);return /flex/.test(s.display)&&s.flexDirection.startsWith('row')};
+   // Climb through inline elements and inline-tag items of a row flex container; stop at block, column-flex and grid boundaries.
+   const runRoot=el=>{while(el.parentElement){const d=getComputedStyle(el).display;if(d==='inline'||d==='contents'||(INLINE_TAGS.has(el.tagName)&&rowFlex(el.parentElement))){el=el.parentElement;continue}break}return el};
+   const label=el=>{const c=el.closest('[id]');return (c?'#'+c.id+' ':'')+el.tagName.toLowerCase()+(el.className&&typeof el.className==='string'?'.'+el.className.trim().split(/\s+/).join('.'):'')};
+   const runs=new Map(),walk=document.createTreeWalker(document.body,NodeFilter.SHOW_TEXT);
+   while(walk.nextNode()){const n=walk.currentNode,el=n.parentElement;if(!el||el.closest(SKIP)||!n.textContent.trim()||(el.checkVisibility&&!el.checkVisibility({visibilityProperty:true})))continue;const root=runRoot(el);if(!runs.has(root))runs.set(root,[]);for(let i=0;i<n.textContent.length;i++)runs.get(root).push({node:n,i,ch:n.textContent[i]})}
+   const rectCache=new Map(),rect=c=>{if(!rectCache.has(c)){const r=document.createRange();r.setStart(c.node,c.i);r.setEnd(c.node,c.i+1);const b=r.getClientRects()[0];rectCache.set(c,b&&b.height>0?{x:Math.round(b.x),y:Math.round(b.y),width:Math.round(b.width),height:Math.round(b.height)}:null)}return rectCache.get(c)};
+   const sameLine=(a,b)=>{const ra=rect(a),rb=rect(b);if(!ra||!rb)return true;return Math.abs((ra.y+ra.height/2)-(rb.y+rb.height/2))<Math.min(ra.height,rb.height)/2};
+   const isolate=node=>{let el=node.parentElement;while(el&&!(el.tagName==='BDI'||el.hasAttribute('dir')))el=el.parentElement;return el};
+   const ws=ch=>/\s/.test(ch),digit=ch=>/[0-9]/.test(ch),unit=ch=>/[֐-׿؀-ۿ°%‰′″³²µ€$₪]/.test(ch),wordStart=ch=>/[\p{L}°%‰€$₪]/u.test(ch);
+   const SEPARATORS='·•|–—';const findings=[];
+   const excerpt=(run,a,b)=>run.slice(Math.max(0,a-12),Math.min(run.length,b+13)).map(c=>c.ch).join('').replace(/\s+/g,' ').trim();
+   for(const [root,run] of runs){
+    for(let i=0;i<run.length;i++){
+     const c=run[i];
+     if(digit(c.ch)&&!(run[i+1]&&(digit(run[i+1].ch)||(/[.,]/.test(run[i+1].ch)&&run[i+2]&&digit(run[i+2].ch))))){
+      let a=i;while(a>0&&/[\p{L}\p{N}.,:\/\-]/u.test(run[a-1].ch)&&!ws(run[a-1].ch))a--;
+      const token=run.slice(a,i+1).map(x=>x.ch).join('');
+      if(/[A-Za-z]/.test(token))continue; // an ID or version (PRJ07, v2.1), not a quantity
+      let word=null;const next=run[i+1];
+      if(next&&next.node===c.node&&unit(next.ch))word=i+1;
+      else{let k=i+1,spaces=0;while(run[k]&&ws(run[k].ch)){if(run[k].ch===' '||!run[k-1]||!ws(run[k-1].ch)||run[k-1].ch===' ')spaces++;k++}if(spaces>=1&&spaces<=2&&run[k]&&wordStart(run[k].ch))word=k}
+      if(word===null)continue;
+      const iso=isolate(c.node);if(iso&&iso!==isolate(run[word].node)&&!iso.contains(run[word].node))continue; // an isolated value ending in a number
+      if(!sameLine(c,run[word]))findings.push({kind:'number-word',root:label(root),text:excerpt(run,a,word),number:rect(c),word:rect(run[word])});
+     }
+     if(SEPARATORS.includes(c.ch)&&(!run[i-1]||ws(run[i-1].ch))&&(!run[i+1]||ws(run[i+1].ch))){
+      let p=i-1;while(p>=0&&ws(run[p].ch))p--;let n=i+1;while(n<run.length&&ws(run[n].ch))n++;
+      const prev=p>=0?run[p]:null,nxt=n<run.length?run[n]:null;
+      if(!nxt)findings.push({kind:'separator-alone',root:label(root),text:excerpt(run,i,i),separator:rect(c),detail:'no word after the separator in its run'});
+      else if(!prev){if(!sameLine(c,nxt))findings.push({kind:'separator-line',root:label(root),text:excerpt(run,i,n),separator:rect(c),next:rect(nxt)})} // a leading marker ("• קמח")
+      else if(!sameLine(c,prev)||!sameLine(c,nxt))findings.push({kind:'separator-line',root:label(root),text:excerpt(run,p,n),separator:rect(c),prev:rect(prev),next:rect(nxt)});
+     }
+    }
+   }
+   const html=document.documentElement,limit=html.clientWidth,overflowing=[];
+   const scrolls=el=>{for(let a=el.parentElement;a&&a!==html;a=a.parentElement){const o=getComputedStyle(a).overflowX;if(o!=='visible')return true}return false};
+   // Measure against the root box: mobile Chromium widens the layout viewport (innerWidth) to fit an overflow.
+   const page=html.getBoundingClientRect(),outside=el=>{const r=el.getBoundingClientRect();return r.width>0&&(r.right>page.right+1||r.left<page.left-1)};
+   for(const el of document.body.querySelectorAll('*'))if(!el.closest(SKIP)&&outside(el)&&!scrolls(el)&&!(el.parentElement!==document.body&&outside(el.parentElement)))overflowing.push({element:label(el),left:Math.round(el.getBoundingClientRect().left-page.left),right:Math.round(el.getBoundingClientRect().right-page.left)});
+   return {scrollWidth:html.scrollWidth,clientWidth:limit,findings,overflowing:overflowing.slice(0,10),runs:runs.size};
+  };
+  const cells=[];
+  const mobile=await browser.newContext({viewport:{width:320,height:740},isMobile:engine==='chromium',hasTouch:true,deviceScaleFactor:2});
+  for(const [ctx,viewport] of [[context,{width:1280,height:900}],[mobile,{width:320,height:740}],[mobile,{width:412,height:915}]]){
+   for(const text of ['normal','large']){
+    // A fresh page per cell: an overflow in mobile emulation zooms the page out and the zoom persists.
+    const p=await ctx.newPage();p.on('pageerror',e=>consoleErrors.push(e.message));await p.setViewportSize(viewport);await p.goto(route);await p.evaluate(()=>document.fonts.ready);
+    if(text==='large')await p.addStyleTag({content:'html{font-size:150% !important}'}).then(h=>h.evaluate(el=>el.id='rtrtl-large-text'));
+    const result=await p.evaluate(scan);const name=viewport.width+' '+text;
+    const of=kind=>result.findings.filter(f=>f.kind===kind||(kind==='separator'&&f.kind.startsWith('separator')));
+    check(name+': numbers stay on the line of the next word',of('number-word').length===0,of('number-word'));
+    check(name+': spaced separators stay with both neighbours',of('separator').length===0,of('separator'));
+    check(name+': no horizontal overflow',result.scrollWidth<=result.clientWidth,{scrollWidth:result.scrollWidth,clientWidth:result.clientWidth,overflowing:result.overflowing});
+    const shot=path.join(root,`lines-${viewport.width}-${text}.png`);const section=p.locator('#lines');
+    if(await section.count())await section.screenshot({path:shot});else await p.screenshot({path:shot,fullPage:true});
+    await p.evaluate(()=>document.getElementById('rtrtl-large-text')?.remove());await p.close();
+    cells.push({viewport,text,runs:result.runs,findings:result.findings.length});
+   }
+  }
+  await mobile.close();
+  check('no page errors',consoleErrors.length===0,consoleErrors);
+  const report={mode:'lines',browser:engine,browserVersion:browser.version(),channel:engine==='chromium'?args.channel||'chrome':null,fixtureSha256,manifestFixtureSha256:manifest.sha256['fixture.html'],cells,assertions,visualReview:'pending; inspect lines-*.png for the rendered line breaks'};
+  fs.writeFileSync(path.join(root,'lines-results.json'),JSON.stringify(report,null,2));
+  await browser.close();const failed=assertions.filter(x=>!x.pass);console.log(JSON.stringify({mode:'lines',browser:engine,checks:assertions.length,passed:assertions.length-failed.length,failed:failed.map(f=>({name:f.name,detail:f.detail}))}));if(failed.length)process.exitCode=1;return;
  }
  await page.goto(route);await page.evaluate(()=>document.fonts.ready);
  const expected=manifest.cases;
