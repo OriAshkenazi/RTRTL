@@ -14,6 +14,7 @@ RTRTL is a portable Agent Skill with an English/Hebrew/Arabic Cloudflare Workers
 - Write canonical website copy in English first, then adapt naturally into Hebrew. English describes RTL languages generally; the Hebrew problem description focuses on Hebrew.
 - Use **סקיל** and **סוכן ה־AI שלכם** in Hebrew. Preserve **הזכות לכתוב בכיוון הנכון**. Isolate complete Latin names, codes and values in Hebrew markup.
 - Keep locale selection client-only: no location permissions, geolocation or IP lookup. Manual language choice wins.
+- A change to the skill's guidance adds its eval cases to `evals/rtrtl/` first and runs them against the old and new skill with `scripts/run_evals.sh` (see `evals/rtrtl/README.md`). Cite guidance to primary sources, never to another skill it was found in.
 - Keep compatibility claims tied to actual evidence in `COMPATIBILITY.md`. Skill-format support does not prove every renderer or export works.
 - Inspect `git status` before editing. Preserve other sessions' changes. Use separate worktrees when parallel edits would overlap. Commit and publish only the reviewed scope.
 

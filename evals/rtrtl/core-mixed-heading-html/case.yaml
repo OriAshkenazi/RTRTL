@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: core-mixed-heading-html
+expected_outcome: |
+  report.html is a Hebrew page with lang="he" and dir="rtl" on <html>. PRJ07 and
+  "-12.50 mm" each sit in their own LTR scope (<bdi dir="ltr"> or an element with
+  dir="ltr"), while the sentence punctuation stays in the Hebrew text. Direction
+  comes from markup, not from the CSS direction property, and the known Hebrew
+  heading is not marked dir="auto".

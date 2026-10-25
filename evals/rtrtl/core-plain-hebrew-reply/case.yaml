@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: core-plain-hebrew-reply
+expected_outcome: |
+  A short, natural Hebrew message written straight into the reply, in logical
+  order, with "15 דקות" readable. No files are created, no skill reference files
+  are opened, and no rendering, scripts or checks are run for a chat reply.
