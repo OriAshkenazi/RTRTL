@@ -61,7 +61,7 @@ PRJ07: תוכנית עבודה בעברית
 - [PowerPoint](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/powerpoint.md): טקסט ניתן לעריכה · כיוון הפסקה · גופנים · ייצוא ל־PDF נבדק
 - [Excel](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md): כיוון הגיליון · תאים מספריים · טקסט מעורב · ייצוא ל־PDF נבדק
 - [PDF](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md): הטמעת גופנים · פריסת טקסט · חילוץ טקסט · תוצרי הייצוא נבדקו
-- [פורמטים נוספים](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · גרפיקה · LaTeX · טקסט פשוט · כתוביות · לא הכול נבדק
+- [פורמטים נוספים](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · גרפיקה · LaTeX · טקסט פשוט · כתוביות · וידאו · לא הכול נבדק
 
 הבדיקות נערכו על אוסף קטן של דוגמאות בעברית בסביבות המפורטות בתיעוד התאימות. לכל תוכנה וגרסה נדרשת בדיקה נפרדת. [לתוצאות הבדיקות ולמגבלות](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md)
 
