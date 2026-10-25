@@ -5,7 +5,30 @@ on:
 permissions:
   contents: read
 jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@d23441a48e516b6c34aea4fa41551a30e30af803 # v6
+      - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
+        with:
+          python-version: '3.12'
+      - run: python scripts/validate.py
+  # Skills IL counts a release as signed only when the Sigstore attestation comes from its own
+  # reusable workflow (signer identity skills-il/release-workflow), so it creates the release.
   release:
+    needs: validate
+    uses: skills-il/release-workflow/.github/workflows/release.yml@v1
+    permissions:
+      id-token: write
+      contents: write
+      attestations: write
+    with:
+      subject_path: |
+        skills/rtrtl/SKILL.md
+        skills/rtrtl/SKILL_HE.md
+        skills/rtrtl/scripts/**
+  archive:
+    needs: release
     runs-on: ubuntu-latest
     permissions:
       contents: write
@@ -16,22 +39,12 @@ jobs:
       - uses: actions/setup-python@ece7cb06caefa5fff74198d8649806c4678c61a1 # v6
         with:
           python-version: '3.12'
-      - run: python scripts/validate.py
       - run: python scripts/build_agent_skills.py
       - run: cp docs/.well-known/agent-skills/rtrtl.tar.gz "rtrtl-${GITHUB_REF_NAME}.tar.gz"
-      # Sigstore provenance for the installable skill and its archive; Skills IL checks the latest release for it.
       - uses: actions/attest-build-provenance@4d101475d8b20a2381f78447822ac1eab6504dd8 # v4.2.2
         with:
-          subject-path: |
-            skills/rtrtl/SKILL.md
-            skills/rtrtl/SKILL_HE.md
-            rtrtl-${{ github.ref_name }}.tar.gz
-      - name: Publish the release with the attested archive
+          subject-path: rtrtl-${{ github.ref_name }}.tar.gz
+      - name: Add the installable archive to the release
         env:
           GH_TOKEN: ${{ github.token }}
-        run: |
-          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
-            gh release upload "$GITHUB_REF_NAME" "rtrtl-${GITHUB_REF_NAME}.tar.gz" --clobber
-          else
-            gh release create "$GITHUB_REF_NAME" "rtrtl-${GITHUB_REF_NAME}.tar.gz" --title "RTRTL $GITHUB_REF_NAME" --generate-notes --verify-tag
-          fi
+        run: gh release upload "$GITHUB_REF_NAME" "rtrtl-${GITHUB_REF_NAME}.tar.gz" --clobber
