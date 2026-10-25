@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: text-srt-legacy-encoding
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  movie.he.srt is a Windows-1255 (cp1255) file: its bytes are not valid UTF-8, so a
+  player that reads UTF-8 shows replacement characters. The fix decodes it as cp1255
+  (not ISO-8859-8, which has no ₪, en dash, curly quotes, gershayim or niqqud) and
+  writes UTF-8. Every Hebrew character survives, including ₪150, the en dash, the
+  quotes, צה״ל and the niqqud in שָׁלוֹם; cue numbers, timings and line structure are
+  unchanged, and no bidi control characters are added to the cues.
