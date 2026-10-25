@@ -28,6 +28,28 @@ def validate():
     core = (skill / 'SKILL.md').read_text(encoding='utf-8')
     if not core.startswith('---\nname: rtrtl\n') or 'description:' not in core.split('---')[1]:
         errors.append('Skill frontmatter must identify rtrtl and describe its trigger')
+    # Skills IL listing: bilingual display metadata, a Hebrew edition that hosts never load as a skill,
+    # and a root LICENSE that GitHub detects as plain MIT (extra notes there make it "Other").
+    frontmatter = core.split('---')[1]
+    for field in ('license: MIT', 'display_name:', 'display_description:', 'tags:'):
+        if field not in frontmatter:
+            errors.append(f'SKILL.md frontmatter is missing {field}')
+    for key in ('display_name', 'display_description', 'tags'):
+        block = re.search(rf'^  {key}:\n((?:    .*\n)+)', frontmatter, re.M)
+        if not block or not re.search(r'^    en:', block[1], re.M) or not re.search(r'^    he:', block[1], re.M):
+            errors.append(f'SKILL.md metadata.{key} needs en and he values')
+    hebrew = skill / 'SKILL_HE.md'
+    if not hebrew.exists():
+        errors.append('Missing skills/rtrtl/SKILL_HE.md')
+    else:
+        body_he = hebrew.read_text(encoding='utf-8')
+        if body_he.startswith('---'):
+            errors.append('SKILL_HE.md must not have frontmatter, or hosts may load it as a second skill')
+        links = lambda text: sorted(set(re.findall(r'\]\((references/[^)\s]+)\)', text)))
+        if links(core) != links(body_he):
+            errors.append('SKILL_HE.md must link the same references as SKILL.md; update both together')
+    if (ROOT / 'LICENSE').read_bytes() != (skill / 'LICENSE').read_bytes():
+        errors.append('Root LICENSE must match skills/rtrtl/LICENSE exactly so GitHub detects MIT')
     for path in ROOT.rglob('*'):
         if any(part in {'.git', '__pycache__', 'node_modules'} for part in path.parts) or not path.is_file():
             continue

@@ -1,6 +1,17 @@
 ---
 name: rtrtl
 description: Author readable Hebrew and mixed Hebrew/English text with correct RTL from the start. Use for Hebrew authoring or RTL repairs in the requested format.
+license: MIT
+metadata:
+  display_name:
+    en: "RTRTL: Right to RTL"
+    he: "הזכות לכתוב בכיוון הנכון"
+  display_description:
+    en: "An open-source skill for readable Hebrew and mixed Hebrew/English text, with the right direction from the first draft."
+    he: "סקיל בקוד פתוח לכתיבה קריאה בעברית ובטקסט מעורב, בכיוון הנכון כבר מהטיוטה הראשונה."
+  tags:
+    en: [hebrew, rtl, bidi, localization, i18n]
+    he: [עברית, ימין לשמאל, כיווניות, טקסט דו־כיווני, לוקליזציה]
 ---
 
 # RTRTL
