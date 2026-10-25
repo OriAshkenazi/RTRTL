@@ -48,6 +48,10 @@ Pillow 13.0.0 from its macOS wheel drew the same line letter-reversed with the b
 
 A HyperFrames 0.8.197 check of `dir="rtl"` on `<html>` versus on the composition root was attempted: its `snapshot` frames were correct in both, and `render` failed on this machine for every variant with an unrelated browser-session error, so no rendered-video claim is made. Remotion was not run.
 
+### Caption tokens
+
+The same day, Chrome 152.0.7977.167 (the Claude desktop app's built-in browser) rendered `ברוכים הבאים ל־Acme Cloud בגרסה 3` as one `dir="rtl"` line of inline word spans four ways. Spans with no `dir`, and one `<bdi dir="ltr">` around both `Acme` and `Cloud`, displayed `Acme Cloud`. `dir="ltr"` on the `Cloud` span alone, or separate LTR scopes on `Acme` and `Cloud`, displayed `Cloud Acme`. One phrase, one browser.
+
 ## Website languages and responsive layout
 
 The website has English, Hebrew and Arabic editions at `rtrtl.org`. Interactive translations live in one `docs/assets/i18n.js` catalog and all editions share the same UI script. Page text, direction and sharing metadata remain in localized static HTML. Arabic installation prompts request an Arabic compatibility check; this translation does not certify the skill's other renderers for Arabic.

@@ -26,7 +26,7 @@ Set the style's `Encoding` field to `-1` for every style that carries Hebrew. li
 Captions in an HTML composition are web text: follow [web](web.md).
 
 - Render caption tokens as inline `<span>`s, in logical order, inside one caption line that carries `lang="he" dir="rtl"`. Don't give each word its own flex item or use `row-reverse`: flex items follow the container's direction, not bidi, so a Latin brand or a number lands where the layout puts it rather than where the text does (CSS Flexbox, `flex-direction`).
-- Put `dir="ltr"` (or `<bdi>`) only on Latin or numeric tokens. The line's direction already covers Hebrew; a `dir="rtl"` on every word span isolates each word and adds nothing.
+- Give a Latin phrase one LTR scope around all of its tokens, splitting a token at its Hebrew prefix if needed: `ל־<bdi dir="ltr"><span>Acme</span> <span>Cloud</span></bdi>`. Leaving the word spans without `dir` also keeps the phrase together. Never isolate each Latin word on its own: in Chrome, separately isolated `Acme` and `Cloud` displayed as "Cloud Acme" (see `COMPATIBILITY.md`). Hebrew words need no `dir` of their own; the line's direction covers them.
 - Highlight the active word with colour or background on its span, not by reordering or re-wrapping the line.
 - For a typewriter reveal, slice by grapheme: `[...new Intl.Segmenter('he', { granularity: 'grapheme' }).segment(text)]`. Niqqud marks are separate code points (`שָׁלוֹם` is 7 code points, 4 graphemes), so `slice` or `[...text]` shows letters with half their marks (ECMA-402 `Intl.Segmenter`, Unicode UAX #29).
 

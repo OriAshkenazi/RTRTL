@@ -4,4 +4,4 @@ focus: trace
 weight: 1
 ---
 
-Each word in the Dialogue line has its own karaoke tag (\k, \kf, \K or \ko), and RTRTL and 2.5 appear unchanged.
+Each word is highlighted in its own time window, by karaoke tags (\k, \kf, \K, \ko) or by per-word events or colour overrides, and RTRTL and 2.5 appear unchanged.

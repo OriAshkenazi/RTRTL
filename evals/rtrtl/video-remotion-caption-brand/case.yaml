@@ -5,6 +5,7 @@ expected_outcome: |
   inside one caption element that carries dir="rtl" (and lang="he"). The words are not
   each a flex item: a flex row orders its items by the container's direction, not by
   bidi, so a per-word flex box or row-reverse places "Acme Cloud" and the number by
-  layout rather than by the text (CSS Flexbox Level 1, flex-direction). The Latin brand
-  sits in an LTR scope, Hebrew word spans do not each get dir="rtl", and the array is
-  not reversed.
+  layout rather than by the text (CSS Flexbox Level 1, flex-direction). "Acme Cloud"
+  stays one LTR phrase: one LTR scope around both words, or no dir on either word.
+  Isolating each word separately displays "Cloud Acme" (COMPATIBILITY.md, "Caption
+  tokens"). Hebrew word spans do not each get dir="rtl", and the array is not reversed.
