@@ -1,0 +1,11 @@
+schema_version: "1.1"
+name: office-docx-invoice-rtl
+expected_outcome: |
+  make_invoice.py writes a right-to-left Hebrew document: paragraphs carry w:bidi,
+  and the bold 16pt heading also sets the complex-script slots (w:bCs, w:szCs),
+  because w:b and w:sz apply only to non-complex-script text (ECMA-376 Part 1,
+  17.3.2). The section is RTL (w:sectPr/w:bidi), and the header and footer, which
+  are separate parts, get the same paragraph RTL. Column order comes from
+  table_direction = WD_TABLE_DIRECTION.RTL (w:bidiVisual) with the row data kept
+  in logical order. The run checks the merged totals row in a render, or says
+  plainly that it could not.
