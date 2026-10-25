@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: web-rtl-drawer-toggle
+expected_outcome: |
+  The drawer sits on the right (the inline-start side in RTL) and slides in from
+  the right; the switch thumb travels toward the left when turned on; the skip link
+  is hidden without a large physical left offset (a clip-based visually-hidden
+  pattern or similar that causes no sideways scroll); and the Radix portal gets the
+  direction too (DirectionProvider dir="rtl" or dir="rtl" on the portalled
+  content). No CSS direction property.

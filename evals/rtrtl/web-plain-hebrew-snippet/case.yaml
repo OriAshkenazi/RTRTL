@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: web-plain-hebrew-snippet
+expected_outcome: |
+  A short HTML snippet with a Hebrew heading and two paragraphs, written in the
+  reply or a single file. 1987 needs no wrapper. No dir="auto", lang="en" or extra
+  LTR wrappers on known Hebrew text, no Intl, framework or font setup, and the run
+  does not open web-frameworks.md or run browser checks.
