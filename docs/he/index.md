@@ -56,12 +56,12 @@ PRJ07: תוכנית עבודה בעברית
 
 הנחיות בסיס קצרות. פירוט נוסף לפי הפורמט שבו עובדים.
 
-- [Web ו־React](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/web.md): כיוון העמוד · טקסט מעורב · תצוגה בנייד · נבדק בדפדפן
-- [Word](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/word.md): כיוון הפסקה · יישור · הגדרות גופנים · ייצוא ל־PDF נבדק
-- [PowerPoint](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/powerpoint.md): טקסט ניתן לעריכה · כיוון הפסקה · גופנים · ייצוא ל־PDF נבדק
-- [Excel](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md): כיוון הגיליון · תאים מספריים · טקסט מעורב · ייצוא ל־PDF נבדק
-- [PDF](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md): הטמעת גופנים · פריסת טקסט · חילוץ טקסט · תוצרי הייצוא נבדקו
-- [פורמטים נוספים](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · גרפיקה · LaTeX · טקסט פשוט · כתוביות · וידאו · לא הכול נבדק
+- [Web ו־React](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/web.md): כיוון העמוד, טקסט מעורב, תצוגה בנייד · נבדק בדפדפן
+- [Word](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/word.md): כיוון הפסקה, יישור, הגדרות גופנים · ייצוא ל־PDF נבדק
+- [PowerPoint](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/powerpoint.md): טקסט ניתן לעריכה, כיוון הפסקה, גופנים · ייצוא ל־PDF נבדק
+- [Excel](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md): כיוון הגיליון, תאים מספריים, טקסט מעורב · ייצוא ל־PDF נבדק
+- [PDF](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md): הטמעת גופנים, פריסת טקסט, חילוץ טקסט · תוצרי הייצוא נבדקו
+- [פורמטים נוספים](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF, גרפיקה, LaTeX, טקסט פשוט, כתוביות, וידאו · לא הכול נבדק
 
 הבדיקות נערכו על אוסף קטן של דוגמאות בעברית בסביבות המפורטות בתיעוד התאימות. לכל תוכנה וגרסה נדרשת בדיקה נפרדת. [לתוצאות הבדיקות ולמגבלות](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md)
 
