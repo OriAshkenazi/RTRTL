@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: web-user-comments-list
+expected_outcome: |
+  Each comment's text (and each author name) gets its own dir="auto" or <bdi>,
+  rather than one dir="auto" on the list around them. The fixed "Beta" badge is a
+  known English run: dir="ltr" with lang="en". User text of unknown language is
+  not tagged lang="en" or lang="he".
