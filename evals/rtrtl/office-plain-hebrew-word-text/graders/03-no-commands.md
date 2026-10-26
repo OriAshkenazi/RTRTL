@@ -1,7 +1,6 @@
 ---
-type: tool_used
-tool: Bash
-max: 0
+type: llm
+focus: trace
 weight: 1
 ---
 

@@ -1,9 +1,7 @@
 ---
-type: tool_used
-tool: Read
-input_match: 'references/'
-max: 0
+type: llm
+focus: trace
 weight: 1
 ---
 
-The run did not open any skill reference file.
+The run did not open any file under the skill's references/ folder.
