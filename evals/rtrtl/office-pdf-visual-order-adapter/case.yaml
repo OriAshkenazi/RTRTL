@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: office-pdf-visual-order-adapter
+expected_outcome: |
+  visual_lines.py wraps the logical paragraph into lines first and converts each
+  line to visual order separately. It uses bidi.algorithm.get_display, which
+  mirrors brackets, or handles mirroring itself: in python-bidi 0.6.12,
+  bidi.get_display leaves "(QA-17)" as ")QA-17(" in the visual string. The logical
+  text stays the stored source, and the reply notes that copy and search in such a
+  PDF give visual-order text.

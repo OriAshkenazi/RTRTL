@@ -1,0 +1,16 @@
+schema_version: "1.1"
+name: text-telegram-latin-first-lines
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  A Telegram message has no direction attribute; each line takes its direction
+  from its first strong character, so a Hebrew line that starts with a Latin
+  product name is laid out LTR. The fix adds one U+200F RIGHT-TO-LEFT MARK at the
+  start of each Hebrew line whose first strong character is Latin (the Galaxy S24
+  and AirPods Pro lines), and leaves alone the lines that already start with
+  Hebrew, the English "Questions?" line and the SALE-2026 code block. It adds the
+  mark while building the text, before the bold/pre entity offsets (UTF-16 code
+  units) are computed and before the message is split, so every entity still
+  covers its own text. It does not scatter RLM/LRM around the ₪ prices, does not
+  switch to FSI/PDI isolates or override controls, and says the client rendering
+  still needs checking in the Telegram app.

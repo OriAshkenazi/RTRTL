@@ -1,0 +1,7 @@
+schema_version: "1.1"
+name: text-chat-hebrew-reply-restraint
+expected_outcome: |
+  A short natural Hebrew message in the reply, ready to paste, with "9:00" and
+  "₪150" written plainly. Every line starts with Hebrew, so it needs no marks: the
+  reply adds no invisible direction characters (RLM, LRM, embeddings, overrides or
+  isolates), creates no files, opens no skill reference files and runs no checks.

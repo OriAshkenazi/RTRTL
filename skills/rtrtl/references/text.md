@@ -6,7 +6,21 @@ TXT/CSV encode characters, not paragraph layout. Use explicit UTF-8; a BOM can b
 
 SRT/VTT must keep timing syntax, cue indices and canonical Hebrew text intact. Test the intended player: alignment and bidirectional support vary. Do not reverse cues or add HTML that the player does not support. No subtitle player was exercised in the 2026-10-19 fixture run.
 
+Hebrew SRT files are often Windows-1255. When the bytes are not valid UTF-8, or a UTF-8 read shows U+FFFD, decode the original bytes as `cp1255` and write UTF-8, keeping cue numbers, timings and line endings. Do not decode as ISO-8859-8 (`hebrew`): it lacks `₪`, `–`, curly quotes, gershayim `״` and niqqud, which Windows-1255 has ([CP1255 mapping](https://www.unicode.org/Public/MAPPINGS/VENDORS/MICSFT/WINDOWS/CP1255.TXT)). Check the result has Hebrew letters and no U+FFFD before replacing the file. A file that already contains U+FFFD was saved after a wrong decode and cannot be repaired from itself; go back to the original bytes.
+
 For a plain-text display layer that demonstrably supports Unicode isolates, wrap a whole known LTR phrase in balanced LRI `U+2066` / PDI `U+2069`; use FSI `U+2068` for unknown direction. Keep canonical values clean. Do not scatter RLM/LRM or override controls; use the target adapter's tested compatibility exception only when required. A reply/rewrite does not need a new rendering fixture.
+
+In source code, identifiers and URLs, embedding, override and isolate controls (U+202A–U+202E, U+2066–U+2069) are also a security finding, since code can display differently from how it runs ([CVE-2021-42574](https://www.cve.org/CVERecord?id=CVE-2021-42574)): reject them there rather than stripping them from all prose.
+
+## Chat messages (untested)
+
+A Telegram or WhatsApp message has no `dir`. Clients are expected to take each line's direction from its first strong character ([UAX #9](https://www.unicode.org/reports/tr9/#P2) P2–P3 per paragraph), so a Hebrew line that starts with a Latin word (`Galaxy S24 במחיר מיוחד`) lays out LTR. This client behaviour has not been verified on a device yet; treat the fix below as a compatibility exception still to be tested, and say so when using it.
+
+- Put one U+200F RIGHT-TO-LEFT MARK at the start of a Hebrew line whose first strong character is Latin. Leave lines that already start with Hebrew, English replies and code blocks or `pre` entities unchanged; do not prefix every line.
+- Insert the mark while building the text: before splitting long messages and before computing entity offsets. Telegram counts entity offsets and lengths in UTF-16 code units, and the mark is one unit, so adding it afterwards shifts every later entity ([Bot API](https://core.telegram.org/bots/api#messageentity)).
+- Do not add marks around amounts inside a Hebrew line: `₪` is bidi class ET and resolves with its number (`₪150`) under UAX #9 rule W5.
+- Whether these clients honour isolates (FSI/PDI) is unverified; do not use them here.
+- Telegram's MarkdownV2 and HTML parse modes run on the logical text, and Hebrew does not break them. The usual failure is escaping: MarkdownV2 requires a backslash before reserved characters such as `.`, `-` and `!`, in Hebrew sentences too ([formatting options](https://core.telegram.org/bots/api#formatting-options)).
 
 ## Line breaks (any renderer)
 

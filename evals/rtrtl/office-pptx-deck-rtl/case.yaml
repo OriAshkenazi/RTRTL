@@ -1,0 +1,9 @@
+schema_version: "1.1"
+name: office-pptx-deck-rtl
+expected_outcome: |
+  make_deck.js uses pptxgenjs's own options: rtlMode: true (a:pPr rtl="1") and
+  lang: 'he-IL' (pptxgenjs defaults run language to en-US). It sets table column
+  order with rtl="1" on a:tblPr, which pptxgenjs 4.0.1 always writes empty, and
+  makes the speaker notes RTL in the notes slide XML, which addNotes writes with no
+  paragraph direction. The chart puts Q1 on the right with catAxisOrientation
+  'maxMin' (c:orientation), and no table or chart data is reversed.

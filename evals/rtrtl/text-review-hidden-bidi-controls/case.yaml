@@ -1,0 +1,12 @@
+schema_version: "1.1"
+name: text-review-hidden-bidi-controls
+context:
+  scaffold_script: place-files.sh
+expected_outcome: |
+  access.py hides U+202E RIGHT-TO-LEFT OVERRIDE and U+2066/U+2069 isolate controls
+  inside the string compared in is_admin, so the line displays differently from
+  how it runs (the "Trojan Source" pattern, CVE-2021-42574). The review finds the
+  controls, names them by code point and line, treats them as a security problem
+  that blocks the merge, and asks for them to be removed from the code (or the
+  file rejected), rather than treating them as a Hebrew display issue. It does
+  not ask to strip ordinary Hebrew from the greeting or comments.
