@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: office-plain-hebrew-word-text
+expected_outcome: |
+  Three short Hebrew agenda points written straight into the reply, in logical
+  order. Text to paste into Word is still a chat reply: no files, no reference
+  files opened, no scripts, renders or checks.

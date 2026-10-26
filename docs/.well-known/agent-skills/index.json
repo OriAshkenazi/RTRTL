@@ -6,7 +6,7 @@
       "type": "archive",
       "description": "Author readable Hebrew and mixed Hebrew/English text with correct RTL from the start. Use for Hebrew authoring or RTL repairs in the requested format.",
       "url": "/.well-known/agent-skills/rtrtl.tar.gz",
-      "digest": "sha256:5408d98dc8b4bfdeb8a49426439b3954e56c13e93f96456e378970e3373ea4f8"
+      "digest": "sha256:c771ba69d2ac72edbfbf487862fffe5cf1074dfbc9164248f34ecb0f52c2dc8c"
     }
   ]
 }

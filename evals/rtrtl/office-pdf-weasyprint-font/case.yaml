@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: office-pdf-weasyprint-font
+expected_outcome: |
+  make_receipt.py passes logical Hebrew to WeasyPrint (no get_display or other
+  pre-reordering), marks the page dir="rtl", and gives HTML(string=...) a base_url
+  so the relative @font-face URL resolves; without one, WeasyPrint uses another
+  font. The run checks that receipt.pdf embeds Noto Sans Hebrew, or says it could
+  not.
+context:
+  scaffold_script: place-files.sh
