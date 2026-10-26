@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: web-tailwind-price-list
+expected_outcome: |
+  PriceList.jsx isolates each Intl-formatted amount in a <bdi> (or a dir="auto"
+  element) instead of forcing dir="ltr" on it, computes the total from the numeric
+  prices and discounts rather than parsing formatted strings, spaces the row with
+  gap or logical utilities instead of space-x plus rtl:space-x-reverse, and puts
+  English brand names in their own isolated run.
