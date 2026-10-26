@@ -61,7 +61,7 @@ PRJ07: خطة عمل باللغة العربية
 - [PowerPoint](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/powerpoint.md): نص قابل للتحرير · اتجاه الفقرة · الخطوط · اختُبر التصدير إلى PDF
 - [Excel](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md): اتجاه الورقة · الخلايا الرقمية · النص المختلط · اختُبر التصدير إلى PDF
 - [PDF](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md): تضمين الخطوط · تخطيط النص · استخراج النص · رُوجع إخراج PDF
-- [صيغ أخرى](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · الرسوميات · LaTeX · النص العادي · الترجمة النصية · لم تُختبر كلها
+- [صيغ أخرى](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · الرسوميات · LaTeX · النص العادي · الترجمة النصية · الفيديو · لم تُختبر كلها
 
 أُجريت الاختبارات حتى الآن على مجموعة صغيرة من أمثلة اللغة العبرية في البيئات المذكورة في ملاحظات التوافق. تتطلب اللغات والتطبيقات والإصدارات الأخرى اختبارات منفصلة. [اطّلعوا على نتائج الاختبارات وحدودها](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md)
 

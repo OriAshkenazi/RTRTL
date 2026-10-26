@@ -61,7 +61,7 @@ One short core guide. Extra detail for the format you use.
 - [PowerPoint](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/powerpoint.md): Editable text · paragraph direction · fonts · PDF export tested
 - [Excel](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/excel.md): Sheet direction · numeric cells · mixed text · PDF export tested
 - [PDF](https://github.com/OriAshkenazi/RTRTL/blob/main/skills/rtrtl/references/pdf.md): Font embedding · text layout · text extraction · PDF output reviewed
-- [More formats](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · graphics · LaTeX · plain text · subtitles · Not all tested
+- [More formats](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md): WPF · graphics · LaTeX · plain text · subtitles · video · Not all tested
 
 Tests so far use a small set of Hebrew examples in the environments listed in the compatibility notes. Other languages, apps and versions need separate checks. [View test results and limits](https://github.com/OriAshkenazi/RTRTL/blob/main/COMPATIBILITY.md)
 

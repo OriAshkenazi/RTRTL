@@ -1,0 +1,10 @@
+schema_version: "1.1"
+name: video-ffmpeg-karaoke-ass
+expected_outcome: |
+  subs.ass holds the six words in logical order with each word highlighted in its own
+  time window (\k tags or per-word events). The style it uses sets Encoding to -1, so libass picks the base
+  direction from the text and lays the line out whole; with any other Encoding, libass
+  resolves each karaoke run as its own left-to-right paragraph and the words come out
+  in reversed order (libass ass_shaper.c ass_resolve_base_direction; COMPATIBILITY.md
+  "Burned-in captions"). The text is not reversed or run through python-bidi, and
+  burn.sh uses ffmpeg's subtitles (or ass) filter.

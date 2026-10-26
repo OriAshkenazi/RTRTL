@@ -13,6 +13,7 @@ RTRTL supplies portable authoring principles and format-specific guidance. The f
 | WeasyPrint 69.0 (conda-forge, macOS), 25 October 2026 | Logical Hebrew with a `<bdi dir="ltr">` code, brackets and `₪ 1,250.00` rendered in the intended order (PyMuPDF raster inspected). `HTML(string=...)` with `base_url` embedded the local Noto Sans Hebrew. Without `base_url` it embedded Arial and Verdana, exit code 0 and no warning (pypdf font list) | One short paragraph; no wrapping, tables or other fonts. |
 | python-bidi 0.6.12, 25 October 2026 | `bidi.get_display` returned `)QA-17(` and `א)א`; `bidi.algorithm.get_display` returned `(QA-17)` and `א(א` | Library output only; no PDF was drawn from it. |
 | python-docx 1.2.0, python-pptx 1.0.2, pptxgenjs 4.0.1, 25 October 2026 | Generated package XML inspected: `w:bCs`/`w:szCs`, `w:sectPr/w:bidi`, header/footer `w:bidi`, `w:bidiVisual`; pptxgenjs `rtl="1"`, `lang="he-IL"`, `p:presentation rtl="1"`, empty `<a:tblPr/>`, notes `en-US` with no `rtl`, `c:orientation maxMin` (also from python-pptx `reverse_order`) | Structure only. Not opened or rendered in Word, PowerPoint or LibreOffice. |
+| ffmpeg 9.0.2 + libass 0.17.5 (macOS, 25 October 2026) | Burned-in Hebrew karaoke line: `Encoding=-1` gave correct word and letter order with `Spacing` 0 or 1; `Encoding=1` reversed the karaoke word order, and with `Spacing=1` the letters too. See [Burned-in captions](#burned-in-captions) | One font (Arial), one line, ffmpeg's `subtitles` filter. Players, VSFilter and other libass versions were not tested. |
 | LaTeX, plots, canvas, subtitles, other native UI | Guidance provided | No live renderer qualification in this run. |
 
 Separate four kinds of evidence: canonical source/structure, visible layout and fonts, interaction, and actual search/copy. One cannot substitute for the others. Editing round trips and assistive technologies need their own checks when required.
@@ -32,6 +33,27 @@ These interactions and negative controls were exercised through the Codex in-app
 On 23 October 2026, `check_browser.cjs --checks lines` ran on macOS 27.0.1 in Chrome 155.0.8059.85 and in Playwright's WebKit 27.2 (build 2370), using the synthetic HTML fixture with Arial requested. Chrome's font inspection reported ArialMT for the Hebrew line cases; WebKit's actual font was not inspected. The good forms of the three Hebrew line cases and the 13-case corpus passed at 1280px, and in mobile emulation at 320px and 412px, each with normal and 150% root text (19 checks per engine). A scratch copy with the bad forms swapped in failed in both engines: the status row split `12` from `מ״ב` and left `·` off the line of its neighbours at 320px and 412px; the count `· 4` sat between the lines of a wrapping button name at every width; the centred error line with a long email overflowed at 320px and at 412px with large text. The first run also found the corpus's `-12.50 mm` and `1,234.50 m³` splitting at 320px with large text; the HTML fixture now keeps short quantities on one line without changing the canonical text.
 
 This is Hebrew only, in two desktop engines' viewport emulation, not physical phones, OS text-size settings, Arabic or other renderers. The check covers numbers and spaced separators, not other stranded punctuation.
+
+## Burned-in captions
+
+On 25 October 2026, on macOS 27.0.1, Homebrew's keg-only `ffmpeg-full` 9.0.2 (libass 0.17.5, `--enable-libass --enable-libharfbuzz`, no `--enable-libfribidi`) burned one synthetic Hebrew line, `ברוכים הבאים ל־RTRTL גרסה 2.5 היום.`, in logical order with a `\k40` karaoke tag on each word and Arial 64. The default Homebrew `ffmpeg` 9.0.2 had no `subtitles` or `drawtext` filter. Each style was burned with `subtitles=…:fontsdir=…` onto a plain clip, once with karaoke tags and once without, and a frame at 1.1 s was read:
+
+| Style | Karaoke line | Plain line |
+| --- | --- | --- |
+| `Encoding=1`, `Spacing=1` | Letters and words reversed; highlight from the left | Letters and words reversed |
+| `Encoding=1`, `Spacing=0` | Words in reversed order, letters intact; highlight from the left | Hebrew phrases placed left to right around `RTRTL`; full stop misplaced |
+| `Encoding=-1`, `Spacing=0` | Correct; highlight from the right | Correct |
+| `Encoding=-1`, `Spacing=1` | Correct; highlight from the right | Correct |
+
+This matches libass's source: any `Encoding` other than `-1` sets a left-to-right base direction and leaves whole-line layout off, and each run, or each glyph when `Spacing` is non-zero, is then reordered on its own. A pointed line under `shaping=simple` and `shaping=complex` kept the same word order; the pixels differed only in niqqud placement. `drawtext` in the same build, without FriBidi, drew the Hebrew letter-reversed.
+
+Pillow 13.0.0 from its macOS wheel drew the same line letter-reversed with the basic layout. RAQM was unavailable (requesting it warned and fell back to basic) until Homebrew's `libfribidi` 1.0.17 was on the library path; RAQM then drew it correctly.
+
+A HyperFrames 0.8.197 check of `dir="rtl"` on `<html>` versus on the composition root was attempted: its `snapshot` frames were correct in both, and `render` failed on this machine for every variant with an unrelated browser-session error, so no rendered-video claim is made. Remotion was not run.
+
+### Caption tokens
+
+The same day, Chrome 152.0.7977.167 (the Claude desktop app's built-in browser) rendered `ברוכים הבאים ל־Acme Cloud בגרסה 3` as one `dir="rtl"` line of inline word spans four ways. Spans with no `dir`, and one `<bdi dir="ltr">` around both `Acme` and `Cloud`, displayed `Acme Cloud`. `dir="ltr"` on the `Cloud` span alone, or separate LTR scopes on `Acme` and `Cloud`, displayed `Cloud Acme`. One phrase, one browser.
 
 ## Website languages and responsive layout
 

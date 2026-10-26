@@ -1,0 +1,6 @@
+schema_version: "1.1"
+name: video-hebrew-title-restraint
+expected_outcome: |
+  Three short Hebrew title suggestions written straight into the reply, in logical order.
+  A chat reply about a video is not a video artifact: no files are created, no skill
+  reference files are opened, and nothing is rendered or run.

@@ -1,0 +1,8 @@
+schema_version: "1.1"
+name: video-typewriter-niqqud
+expected_outcome: |
+  Typewriter.tsx reveals the line by user-perceived characters (grapheme clusters, e.g.
+  with Intl.Segmenter granularity "grapheme"), so each niqqud mark stays with its letter;
+  slicing by UTF-16 index or by code point shows bare marks on their own (ECMA-402
+  Intl.Segmenter; Unicode UAX #29). The text stays in logical order in an element with
+  dir="rtl".
