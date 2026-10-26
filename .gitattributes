@@ -9,3 +9,4 @@
 *.ttf binary
 *.json text eol=lf
 *.gz binary
+*.srt binary
