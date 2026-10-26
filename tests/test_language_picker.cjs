@@ -105,8 +105,17 @@ assert.deepEqual(Object.keys(i18n.en).sort(), Object.keys(i18n.ar).sort(), 'Engl
 function visibleText(html, id) {
   const match = html.match(new RegExp(`<p\\b[^>]*id="${id}"[^>]*>([\\s\\S]*?)<\\/p>`));
   assert.ok(match, `missing #${id}`);
-  return match[1].replace(/<[^>]*>/g, '').replace(/&amp;/g, '&').replace(/&lt;/g, '<').replace(/&gt;/g, '>').replace(/&quot;/g, '"').replace(/&#39;/g, "'").trim();
+  let text = match[1];
+  // Strip until nothing changes, so no tag can survive a single pass.
+  for (let previous; previous !== text;) {
+    previous = text;
+    text = text.replace(/<[^>]*>/g, '');
+  }
+  // Decode in one pass so `&amp;lt;` stays `&lt;` instead of becoming `<`.
+  const entities = { amp: '&', lt: '<', gt: '>', quot: '"', '#39': "'" };
+  return text.replace(/&(amp|lt|gt|quot|#39);/g, (_, name) => entities[name]).trim();
 }
+assert.equal(visibleText('<p id="t">a &amp;lt; b <i>c</i> &quot;d&#39;</p>', 't'), 'a &lt; b c "d\'', 'visibleText strips tags and decodes entities once');
 for (const language of ['en', 'he', 'ar']) {
   assert.equal(visibleText(htmlByLanguage[language], 'demo-note'), i18n[language].rtlNote, `${language}: initial demo note matches shared translation`);
 }
