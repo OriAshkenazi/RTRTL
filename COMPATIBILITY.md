@@ -14,6 +14,7 @@ RTRTL supplies portable authoring principles and format-specific guidance. The f
 | python-bidi 0.6.12, 25 October 2026 | `bidi.get_display` returned `)QA-17(` and `א)א`; `bidi.algorithm.get_display` returned `(QA-17)` and `א(א` | Library output only; no PDF was drawn from it. |
 | python-docx 1.2.0, python-pptx 1.0.2, pptxgenjs 4.0.1, 25 October 2026 | Generated package XML inspected: `w:bCs`/`w:szCs`, `w:sectPr/w:bidi`, header/footer `w:bidi`, `w:bidiVisual`; pptxgenjs `rtl="1"`, `lang="he-IL"`, `p:presentation rtl="1"`, empty `<a:tblPr/>`, notes `en-US` with no `rtl`, `c:orientation maxMin` (also from python-pptx `reverse_order`) | Structure only. Not opened or rendered in Word, PowerPoint or LibreOffice. |
 | ffmpeg 9.0.2 + libass 0.17.5 (macOS, 25 October 2026) | Burned-in Hebrew karaoke line: `Encoding=-1` gave correct word and letter order with `Spacing` 0 or 1; `Encoding=1` reversed the karaoke word order, and with `Spacing=1` the letters too. See [Burned-in captions](#burned-in-captions) | One font (Arial), one line, ffmpeg's `subtitles` filter. Players, VSFilter and other libass versions were not tested. |
+| Telegram and WhatsApp on iPhone, 27 October 2026 | One five-line message sent to self in each app. A Hebrew line starting with `Galaxy S24` read LTR, with the name at the far left; the same line with a leading U+200F read RTL in the intended order. Hebrew-first lines with `65W` and `₪150` read correctly with no mark. See [Chat messages](#chat-messages) | App and iOS versions not recorded. Android, desktop and web clients untested; isolates (FSI/PDI) untested. |
 | LaTeX, plots, canvas, subtitles, other native UI | Guidance provided | No live renderer qualification in this run. |
 
 Separate four kinds of evidence: canonical source/structure, visible layout and fonts, interaction, and actual search/copy. One cannot substitute for the others. Editing round trips and assistive technologies need their own checks when required.
@@ -21,6 +22,10 @@ Separate four kinds of evidence: canonical source/structure, visible layout and 
 ## Sharing metadata
 
 A WhatsApp link-preview screenshot exposed misplaced punctuation in a Hebrew title prefixed by the Latin brand. The Hebrew page now serves a Hebrew-only title and descriptions, with brand and locale in separate Open Graph fields and matching title fallback metadata. Static regression checks catch the previous LTR-first title. Browser simulations do not verify WhatsApp: a fresh card in that app, its caching behavior, and other social consumers remain unverified. The screenshot establishes the original failure only; no WhatsApp version was supplied. Direct `/he/` links carry Hebrew metadata without requiring JavaScript; the default English page serves English metadata to non-JavaScript crawlers.
+
+## Chat messages
+
+On 27 October 2026 the same five-line test message was sent to self in Telegram (Saved Messages) and WhatsApp (Message yourself) on an iPhone and checked from screenshots. Both apps took each line's reading order from its first strong character: the unmarked `Galaxy S24 במחיר מיוחד ב־₪2990` read LTR, and the copy with a leading U+200F read RTL. They differed in alignment: Telegram aligned each line by its own direction, while WhatsApp aligned all five lines to the right, including the English last line, which still read in order. The message composers in both apps lay lines out differently from the sent bubble, so check the sent message. Screenshots are kept outside the repository because they show a personal account.
 
 ## Directional controls
 
