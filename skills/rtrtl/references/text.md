@@ -12,9 +12,11 @@ For a plain-text display layer that demonstrably supports Unicode isolates, wrap
 
 In source code, identifiers and URLs, embedding, override and isolate controls (U+202A–U+202E, U+2066–U+2069) are also a security finding, since code can display differently from how it runs ([CVE-2021-42574](https://www.cve.org/CVERecord?id=CVE-2021-42574)): reject them there rather than stripping them from all prose.
 
-## Chat messages (untested)
+## Chat messages
 
-A Telegram or WhatsApp message has no `dir`. Clients are expected to take each line's direction from its first strong character ([UAX #9](https://www.unicode.org/reports/tr9/#P2) P2–P3 per paragraph), so a Hebrew line that starts with a Latin word (`Galaxy S24 במחיר מיוחד`) lays out LTR. This client behaviour has not been verified on a device yet; treat the fix below as a compatibility exception still to be tested, and say so when using it.
+A Telegram or WhatsApp message has no `dir`. Each line takes its reading order from its first strong character ([UAX #9](https://www.unicode.org/reports/tr9/#P2) P2–P3 per paragraph), so a Hebrew line that starts with a Latin word (`Galaxy S24 במחיר מיוחד`) reads LTR: the product name lands at the far left, after the Hebrew. Checked on iPhone in Telegram and WhatsApp on 2026-10-27 (see `COMPATIBILITY.md`, "Chat messages"); Android and desktop clients are untested, so say so when the fix targets them.
+
+- Line alignment differs by client. Telegram aligns each line by its own direction. WhatsApp on iPhone aligns every line of a message the same way as the first line, so an English line in a Hebrew-first message sits on the right but still reads in order. The mark fixes reading order, not that alignment.
 
 - Put one U+200F RIGHT-TO-LEFT MARK at the start of a Hebrew line whose first strong character is Latin. Leave lines that already start with Hebrew, English replies and code blocks or `pre` entities unchanged; do not prefix every line.
 - Insert the mark while building the text: before splitting long messages and before computing entity offsets. Telegram counts entity offsets and lengths in UTF-16 code units, and the mark is one unit, so adding it afterwards shifts every later entity ([Bot API](https://core.telegram.org/bots/api#messageentity)).

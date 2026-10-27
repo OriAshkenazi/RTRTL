@@ -43,8 +43,10 @@ class ChatGuidanceTests(unittest.TestCase):
         self.assertEqual(unicodedata.bidirectional('‏'), 'R')
         self.assertEqual(len('‏'.encode('utf-16-le')) // 2, 1)
 
-    def test_chat_section_stays_marked_untested(self):
-        self.assertIn('## Chat messages (untested)', TEXT)
+    def test_chat_section_states_what_was_checked(self):
+        section = TEXT.split('## Chat messages\n', 1)[1].split('\n## ', 1)[0]
+        self.assertIn('iPhone in Telegram and WhatsApp on 2026-10-27', section)
+        self.assertIn('Android and desktop clients are untested', section)
 
     def test_no_claim_that_rtl_breaks_markdownv2_parsing(self):
         for sentence in re.split(r'(?<=[.!?])\s+', TEXT):
