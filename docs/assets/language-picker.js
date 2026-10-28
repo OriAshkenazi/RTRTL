@@ -19,7 +19,9 @@
     if (next !== undefined) { event.preventDefault(); picker.open = true; links[next].focus(); }
   });
   picker.addEventListener('focusout', event => {
-    if (!picker.contains(event.relatedTarget)) close();
+    // Safari does not focus a tapped link, so a null target is a click inside;
+    // the document click handler closes the menu for clicks outside.
+    if (event.relatedTarget && !picker.contains(event.relatedTarget)) close();
   });
   document.addEventListener('click', event => {
     if (!picker.contains(event.target)) close();

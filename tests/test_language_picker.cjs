@@ -31,6 +31,8 @@ page.key('ArrowUp');
 assert.equal(page.doc.activeElement, page.links[2]);
 page.key('Escape');
 page.key('ArrowDown');
+page.picker.handlers.focusout({relatedTarget:null});
+assert.equal(page.picker.open, true, 'Safari tap on a language (focus goes nowhere) keeps the menu open for the click');
 page.doc.handlers.click({target:page.links[1]});
 assert.equal(page.picker.open, true, 'clicking a language does not dismiss before navigation');
 page.links[2].handlers.click();
